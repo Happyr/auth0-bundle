@@ -1,4 +1,4 @@
-# Auth0Bundle for real asynchronous messages
+# Auth0 integration with Symfony
 
 [![Latest Version](https://img.shields.io/github/release/Happyr/Auth0Bundle.svg?style=flat-square)](https://github.com/Happyr/Auth0Bundle/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
