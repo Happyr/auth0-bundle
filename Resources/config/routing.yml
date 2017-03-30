@@ -1,0 +1,7 @@
+auth0_login:
+  path:      /login
+  defaults:  { _controller: HappyrAuth0Bundle:Login:login }
+
+auth0_callback:
+    path:      /callback
+    defaults:  { _controller: HappyrAuth0Bundle:Callback:callback }

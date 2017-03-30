@@ -20,7 +20,10 @@ class Configuration implements ConfigurationInterface
 
         $root
             ->children()
-                ->booleanNode('enabled')->defaultTrue()->end()
+                ->scalarNode('domain')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('connection')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('client_id')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('client_secret')->isRequired()->cannotBeEmpty()->end()
 
             ->end();
 

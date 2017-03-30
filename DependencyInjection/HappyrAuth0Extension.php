@@ -25,39 +25,10 @@ class HappyrAuth0Extension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $this->requireBundle('SimpleBusAsynchronousBundle', $container);
-
-        // Add the command and event queue names to the consumer wrapper
-        $def = $container->getDefinition('happyr.mq2php.consumer_wrapper');
-        $def->replaceArgument(0, $config['command_queue'])
-            ->replaceArgument(1, $config['event_queue']);
-
-        $serializerId = 'happyr.mq2php.message_serializer';
-        if (!$config['enabled']) {
-            $container->removeDefinition($serializerId);
-
-            return;
-        }
-
-        // Add default headers to the serializer
-        $def = $container->getDefinition($serializerId);
-        $def->replaceArgument(2, $config['message_headers']);
-
         // Add the secret key as parameter
-        $container->setParameter('happyr.mq2php.secret_key', $config['secret_key']);
-    }
-
-    /**
-     * Make sure we have activated the required bundles.
-     *
-     * @param $bundleName
-     * @param ContainerBuilder $container
-     */
-    private function requireBundle($bundleName, ContainerBuilder $container)
-    {
-        $enabledBundles = $container->getParameter('kernel.bundles');
-        if (!isset($enabledBundles[$bundleName])) {
-            throw new \LogicException(sprintf('You need to enable "%s" as well', $bundleName));
-        }
+        $container->setParameter('auth0.domain', $config['domain']);
+        $container->setParameter('auth0.connection', $config['connection']);
+        $container->setParameter('auth0.client_id', $config['client_id']);
+        $container->setParameter('auth0.client_secret', $config['client_secret']);
     }
 }
