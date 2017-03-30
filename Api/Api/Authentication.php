@@ -9,8 +9,7 @@ namespace Happyr\Auth0Bundle\Api\Api;
 
 use Happyr\Auth0Bundle\Api\Exception;
 use Happyr\Auth0Bundle\Api\Exception\InvalidArgumentException;
-use Happyr\Auth0Bundle\Api\Model\Stat\Stat as StatModel;
-use Happyr\Auth0Bundle\Api\Model\Stat\Total;
+use Happyr\Auth0Bundle\Api\Model\Authentication\Token;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -22,7 +21,7 @@ final class Authentication extends HttpApi
      * @param string $username
      * @param array  $params
      *
-     * @return StatModel|ResponseInterface
+     * @return Token|ResponseInterface
      *
      * @throws Exception
      */
@@ -31,18 +30,15 @@ final class Authentication extends HttpApi
         if (empty($code)) {
             throw new InvalidArgumentException('Code cannot be empty');
         }
-        if (empty($params['redirect_uri'])) {
-            throw new InvalidArgumentException('Redirect uri cannot be empty');
-        }
-
-        $state = uniqid();
 
         $default = [
-            'response_type' => 'code',
-            'state' => $state,
+            'code' => $code,
+            'grant_type' => 'authorization_code',
+            'client_secret' => $this->clientData->getSecret(),
+            'client_id' => $this->clientData->getId(),
         ];
 
-        $response = $this->httpGet('authorize', array_merge($default, $params));
+        $response = $this->httpPost('/oauth/token', array_merge($default, $params));
 
         if (!$this->hydrator) {
             return $response;
@@ -53,6 +49,6 @@ final class Authentication extends HttpApi
             $this->handleErrors($response);
         }
 
-        return $this->hydrator->hydrate($response, StatModel::class);
+        return $this->hydrator->hydrate($response, Token::class);
     }
 }

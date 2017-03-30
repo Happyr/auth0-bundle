@@ -37,8 +37,8 @@ final class HttpClientException extends \RuntimeException implements Exception
             } else {
                 $this->responseBody = json_decode($body, true);
 
-                if (isset($this->responseBody['error'])) {
-                    $this->message .= "\n".$this->responseBody['error']['message'];
+                if (isset($this->responseBody['error_description'])) {
+                    $this->message .= "\n".$this->responseBody['error_description'];
                 }
             }
         }
@@ -57,6 +57,11 @@ final class HttpClientException extends \RuntimeException implements Exception
     public static function requestFailed(ResponseInterface $response = null)
     {
         return new self('Parameters were valid but request failed. Try again.', 402, $response);
+    }
+
+    public static function forbidden(ResponseInterface $response = null)
+    {
+        return new self('You are not allow to do this.', 403, $response);
     }
 
     public static function notFound(ResponseInterface $response = null)

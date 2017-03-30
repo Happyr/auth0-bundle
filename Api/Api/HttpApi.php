@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Happyr\Auth0Bundle\Api\Api;
 
+use Happyr\Auth0Bundle\Api\ClientData;
 use Happyr\Auth0Bundle\Api\Exception\Domain as DomainExceptions;
 use Happyr\Auth0Bundle\Api\Exception\DomainException;
 use Happyr\Auth0Bundle\Api\Hydrator\NoopHydrator;
@@ -38,14 +39,22 @@ abstract class HttpApi
     protected $requestBuilder;
 
     /**
-     * @param HttpClient     $httpClient
-     * @param RequestBuilder $requestBuilder
-     * @param Hydrator       $hydrator
+     * @var ClientData
      */
-    public function __construct(HttpClient $httpClient, Hydrator $hydrator, RequestBuilder $requestBuilder)
+    protected $clientData;
+
+    /**
+     *
+     * @param HttpClient $httpClient
+     * @param Hydrator $hydrator
+     * @param RequestBuilder $requestBuilder
+     * @param ClientData $data
+     */
+    public function __construct(HttpClient $httpClient, Hydrator $hydrator, RequestBuilder $requestBuilder, ClientData $data)
     {
         $this->httpClient = $httpClient;
         $this->requestBuilder = $requestBuilder;
+        $this->clientData = $data;
         if (!$hydrator instanceof NoopHydrator) {
             $this->hydrator = $hydrator;
         }
@@ -103,9 +112,9 @@ abstract class HttpApi
      */
     protected function httpPost($path, array $params = [], array $requestHeaders = [])
     {
-        $requestHeaders['Content-Type'] = 'application/x-www-form-urlencoded';
+        $requestHeaders['Content-Type'] = 'application/json';
 
-        return $this->httpPostRaw($path, http_build_query($params), $requestHeaders);
+        return $this->httpPostRaw($path, $this->createJsonBody($params), $requestHeaders);
     }
 
     /**
@@ -135,10 +144,10 @@ abstract class HttpApi
      */
     protected function httpPut($path, array $params = [], array $requestHeaders = [])
     {
-        $requestHeaders['Content-Type'] = 'application/x-www-form-urlencoded';
+        $requestHeaders['Content-Type'] = 'application/json';
 
         return $this->httpClient->sendRequest(
-            $this->requestBuilder->create('PUT', $path, $requestHeaders, http_build_query($params))
+            $this->requestBuilder->create('PUT', $path, $requestHeaders, $this->createJsonBody($params))
         );
     }
 
@@ -153,10 +162,10 @@ abstract class HttpApi
      */
     protected function httpDelete($path, array $params = [], array $requestHeaders = [])
     {
-        $requestHeaders['Content-Type'] = 'application/x-www-form-urlencoded';
+        $requestHeaders['Content-Type'] = 'application/json';
 
         return $this->httpClient->sendRequest(
-            $this->requestBuilder->create('DELETE', $path, $requestHeaders, http_build_query($params))
+            $this->requestBuilder->create('DELETE', $path, $requestHeaders, $this->createJsonBody($params))
         );
     }
 
@@ -179,6 +188,8 @@ abstract class HttpApi
                 throw DomainExceptions\HttpClientException::unauthorized($response);
             case 402:
                 throw DomainExceptions\HttpClientException::requestFailed($response);
+            case 403:
+                throw DomainExceptions\HttpClientException::forbidden($response);
             case 404:
                 throw DomainExceptions\HttpClientException::notFound($response);
             case 500 <= $statusCode:
@@ -186,5 +197,17 @@ abstract class HttpApi
             default:
                 throw new DomainExceptions\UnknownErrorException();
         }
+    }
+
+    /**
+     * Create a JSON encoded version of an array of parameters.
+     *
+     * @param array $params Request parameters
+     *
+     * @return null|string
+     */
+    private function createJsonBody(array $params)
+    {
+        return (count($params) === 0) ? null : json_encode($params, empty($params) ? JSON_FORCE_OBJECT : 0);
     }
 }

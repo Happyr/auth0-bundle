@@ -13,6 +13,7 @@ class CallbackController extends Controller
 {
     public function callbackAction()
     {
+        $s=2;
         // process login with SDK
        // if (state) redirect to url on state parameter
   //else redirect to base logged in URL

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Happyr\Auth0Bundle\Api;
 
+use Happyr\Auth0Bundle\Api\Http\Plugin\ClientSecretPlugin;
 use Http\Client\HttpClient;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\HttpClientDiscovery;
@@ -30,16 +31,6 @@ final class HttpClientConfigurator
      * @var string
      */
     private $endpoint = 'https://fake-twitter.com';
-
-    /**
-     * @var string
-     */
-    private $clientId;
-
-    /**
-     * @var string
-     */
-    private $clientSecret;
 
     /**
      * @var UriFactory
@@ -79,14 +70,9 @@ final class HttpClientConfigurator
         $plugins = $this->prependPlugins;
 
         $plugins[] = new Plugin\AddHostPlugin($this->uriFactory->createUri($this->endpoint));
-        $plugins[] = new Plugin\QueryDefaultsPlugin(['client_id'=>$this->clientId]);
         $plugins[] = new Plugin\HeaderDefaultsPlugin([
             'User-Agent' => 'Happyr/auth0-bundle (https://github.com/Happyr/auth0-bundle)',
         ]);
-
-        if (null !== $this->clientId) {
-            $plugins[] = new Plugin\AuthenticationPlugin(new Authentication\Bearer($this->clientId));
-        }
 
         return new PluginClient($this->httpClient, array_merge($plugins, $this->appendPlugins));
     }
@@ -99,30 +85,6 @@ final class HttpClientConfigurator
     public function setEndpoint($endpoint)
     {
         $this->endpoint = $endpoint;
-
-        return $this;
-    }
-
-    /**
-     * @param string $clientId
-     *
-     * @return HttpClientConfigurator
-     */
-    public function setClientId($clientId)
-    {
-        $this->clientId = $clientId;
-
-        return $this;
-    }
-
-    /**
-     * @param string $clientSecret
-     *
-     * @return HttpClientConfigurator
-     */
-    public function setClientSecret($clientSecret)
-    {
-        $this->clientSecret = $clientSecret;
 
         return $this;
     }

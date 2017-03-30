@@ -6,8 +6,9 @@ use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 class SSOToken extends AbstractToken
 {
-    private $authorizationCode;
+    private $accessToken;
 
+    private $expiresAt;
 
     /**
      *
@@ -21,23 +22,42 @@ class SSOToken extends AbstractToken
     /**
      * @return mixed
      */
-    public function getAuthorizationCode()
+    public function getAccessToken()
     {
-        return $this->authorizationCode;
+        return $this->accessToken;
     }
 
     /**
-     * @param mixed $authorizationCode
+     * @param mixed $accessToken
      *
      * @return SSOToken
      */
-    public function setAuthorizationCode($authorizationCode)
+    public function setAccessToken($accessToken)
     {
-        $this->authorizationCode = $authorizationCode;
+        $this->accessToken = $accessToken;
 
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getExpiresAt()
+    {
+        return $this->expiresAt;
+    }
+
+    /**
+     * @param mixed $expiresAt
+     *
+     * @return SSOToken
+     */
+    public function setExpiresAt($expiresAt)
+    {
+        $this->expiresAt = $expiresAt;
+
+        return $this;
+    }
 
 
     public function getCredentials()

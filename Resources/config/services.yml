@@ -3,7 +3,7 @@ services:
     happyr.auth0.api:
         class: Happyr\Auth0Bundle\Api\Auth0
         factory: ['Happyr\Auth0Bundle\Api\Auth0', 'create']
-        arguments: ["https://%auth0.domain%", "%auth0.client_id%"]
+        arguments: ["https://%auth0.domain%", "%auth0.client_id%", "%auth0.client_secret%"]
 
     happyr.auth0.security.single_sign_on_authenticator:
         class: Happyr\Auth0Bundle\Security\SingleSignOnAuthenticator
@@ -22,6 +22,6 @@ services:
           - [ 'setAuth0', ["@happyr.auth0.api"]]
 
     happyr.auth0.security.authentication.entry_point.oauth:
-        class: Happyr\Auth0Bundle\Security\EntryPoint
-        arguments: ["@http_kernel", "@security.http_utils"]
+        class: Happyr\Auth0Bundle\Security\EntryPoint\SSOEntryPoint
+        arguments: [ "@security.http_utils", "%auth0.client_id%", "%auth0.domain%"]
         abstract: true

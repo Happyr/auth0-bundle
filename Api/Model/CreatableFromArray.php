@@ -19,5 +19,5 @@ interface CreatableFromArray
      *
      * @return self
      */
-    public static function createFromArray(array $data);
+    public static function create(array $data);
 }

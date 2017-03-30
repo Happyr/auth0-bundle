@@ -31,11 +31,28 @@ class SSOFactory extends AbstractFactory
 
         $container
             ->setDefinition($entryPointId, new DefinitionDecorator('happyr.auth0.security.authentication.entry_point.oauth'))
-            ->addArgument($config['login_path'])
-            ->addArgument($config['use_forward'])
+            ->addArgument($config['check_path'])
         ;
 
         return $entryPointId;
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param $id
+     * @param $config
+     * @param $userProvider
+     *
+     * @return string
+     */
+    protected function createListener($container, $id, $config, $userProvider)
+    {
+        $listenerId = parent::createListener($container, $id, $config, $userProvider);
+
+        $def = $container->getDefinition($listenerId);
+        $def->addMethodCall('setCallbackPath', [$config['check_path']]);
+
+        return $listenerId;
     }
 
 
@@ -60,7 +77,6 @@ class SSOFactory extends AbstractFactory
 
         $node->children()
             ->scalarNode('connection')->defaultNull()->end()
-            ->scalarNode('login_path')->cannotBeEmpty()->isRequired()->end()
         ->end();
     }
 }
