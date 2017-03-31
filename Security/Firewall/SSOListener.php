@@ -46,8 +46,6 @@ class SSOListener extends AbstractAuthenticationListener
 
     protected function attemptAuthentication(Request $request)
     {
-        $token = new SSOToken();
-
         if (null === $code = $request->query->get('code')) {
             throw new AuthenticationException('No oauth code in the request.');
         }
@@ -56,6 +54,10 @@ class SSOListener extends AbstractAuthenticationListener
             'redirect_uri' => $this->httpUtils->generateUri($request, $this->callbackPath),
         ]);
 
+        $this->auth0->setAccessToken($auth0Token->getAccessToken());
+        $userModel = $this->auth0->user()->userinfo();
+
+        $token = new SSOToken($userModel);
         $token->setAccessToken($auth0Token->getAccessToken())
             ->setExpiresAt($auth0Token->getExpiresAt());
 

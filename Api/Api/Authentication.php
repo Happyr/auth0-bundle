@@ -18,7 +18,7 @@ use Psr\Http\Message\ResponseInterface;
 final class Authentication extends HttpApi
 {
     /**
-     * @param string $username
+     * @param string $code
      * @param array  $params
      *
      * @return Token|ResponseInterface
@@ -40,15 +40,6 @@ final class Authentication extends HttpApi
 
         $response = $this->httpPost('/oauth/token', array_merge($default, $params));
 
-        if (!$this->hydrator) {
-            return $response;
-        }
-
-        // Use any valid status code here
-        if ($response->getStatusCode() !== 200) {
-            $this->handleErrors($response);
-        }
-
-        return $this->hydrator->hydrate($response, Token::class);
+        return $this->hydrateResponse($response, Token::class);
     }
 }

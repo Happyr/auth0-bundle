@@ -77,6 +77,10 @@ class SSOFactory extends AbstractFactory
 
         $node->children()
             ->scalarNode('connection')->defaultNull()->end()
+            ->scalarNode('provider_identifier')
+                ->defaultValue('name')
+                ->info('The value form the auth0 API that should be given to the UserProvider')
+            ->end()
         ->end();
     }
 }

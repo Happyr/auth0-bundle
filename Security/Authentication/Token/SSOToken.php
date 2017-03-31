@@ -11,11 +11,19 @@ class SSOToken extends AbstractToken
     private $expiresAt;
 
     /**
-     *
-     * @param $userId
+     * The user model for the API
+     * @var mixed
      */
-    public function __construct(array $roles = [])
+    private $userModel;
+
+    /**
+     *
+     * @param array $userModel
+     * @param array $roles
+     */
+    public function __construct($userModel, array $roles = [])
     {
+        $this->userModel = $userModel;
         parent::__construct($roles);
     }
 
@@ -58,6 +66,15 @@ class SSOToken extends AbstractToken
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUserModel()
+    {
+        return $this->userModel;
+    }
+
 
 
     public function getCredentials()

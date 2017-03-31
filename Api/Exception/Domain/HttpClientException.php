@@ -51,7 +51,7 @@ final class HttpClientException extends \RuntimeException implements Exception
 
     public static function unauthorized(ResponseInterface $response = null)
     {
-        return new self('Your credentials are incorrect.', 401, $response);
+        return new self('No access token provided or the client credential are incorrect.', 401, $response);
     }
 
     public static function requestFailed(ResponseInterface $response = null)
