@@ -118,6 +118,7 @@ final class Auth0
     {
         return new Api\Authentication($this->httpClient, $this->hydrator, $this->requestBuilder, $this->clientData);
     }
+
     /**
      * @return Api\User
      */

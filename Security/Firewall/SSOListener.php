@@ -54,10 +54,7 @@ class SSOListener extends AbstractAuthenticationListener
             'redirect_uri' => $this->httpUtils->generateUri($request, $this->callbackPath),
         ]);
 
-        $this->auth0->setAccessToken($auth0Token->getAccessToken());
-        $userModel = $this->auth0->user()->userinfo();
-
-        $token = new SSOToken($userModel);
+        $token = new SSOToken();
         $token->setAccessToken($auth0Token->getAccessToken())
             ->setExpiresAt($auth0Token->getExpiresAt());
 

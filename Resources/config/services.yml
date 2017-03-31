@@ -11,7 +11,7 @@ services:
 
     happyr.auth0.security.authentication.provider.sso:
         class: Happyr\Auth0Bundle\Security\Authentication\Provider\SSOProvider
-        arguments: [~]
+        arguments: [~, '@happyr.auth0.api']
         public: false
 
     happyr.auth0.security.authentication.listener.sso:

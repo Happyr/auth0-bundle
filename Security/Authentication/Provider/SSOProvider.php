@@ -2,6 +2,7 @@
 
 namespace Happyr\Auth0Bundle\Security\Authentication\Provider;
 
+use Happyr\Auth0Bundle\Api\Auth0;
 use Happyr\Auth0Bundle\Security\Authentication\Token\SSOToken;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -22,12 +23,21 @@ class SSOProvider implements AuthenticationProviderInterface
     private $userProvider;
 
     /**
-     * @param UserProviderInterface $userProvider
+     * @var Auth0
      */
-    public function __construct(UserProviderInterface $userProvider)
+    private $auth0;
+
+    /**
+     *
+     * @param UserProviderInterface $userProvider
+     * @param Auth0 $auth0
+     */
+    public function __construct(UserProviderInterface $userProvider, Auth0 $auth0)
     {
         $this->userProvider = $userProvider;
+        $this->auth0 = $auth0;
     }
+
 
     /**
      * @param SSOToken $token
@@ -36,23 +46,31 @@ class SSOProvider implements AuthenticationProviderInterface
      */
     public function authenticate(TokenInterface $token)
     {
-        $userModel = $token->getUserModel();
         try {
-            $user = $this->userProvider->loadUserByUsername($userModel);
+            // Fetch info from the user
+            $this->auth0->setAccessToken($token->getAccessToken());
+            $userModel = $this->auth0->user()->userinfo();
+        } catch (\Exception $e) {
+            throw new AuthenticationException('Could not fetch user info from Auth0');
+        }
+
+        try {
+            $user = $this->userProvider->loadUserByUsername(null !== $userModel ? $userModel : $token->getUsername());
         } catch (UsernameNotFoundException $e) {
             $user = null;
         }
 
-        if ($user) {
-            $authenticatedToken = new SSOToken($userModel, array_merge($userModel->getRoles(), $user->getRoles()));
-            $authenticatedToken->setUser($user);
-            $authenticatedToken->setAccessToken($token->getAccessToken())
-                ->setExpiresAt($token->getExpiresAt());
-
-            return $authenticatedToken;
+        if (!$user) {
+            throw new AuthenticationException('The Auth0 SSO authentication failed.');
         }
 
-        throw new AuthenticationException('The Auth0 SSO authentication failed.');
+        $authenticatedToken = new SSOToken(array_merge($userModel->getRoles(), $user->getRoles()));
+        $authenticatedToken->setUser($user);
+        $authenticatedToken->setAccessToken($token->getAccessToken())
+            ->setExpiresAt($token->getExpiresAt())
+            ->setUserModel($userModel);
+
+        return $authenticatedToken;
     }
 
     public function supports(TokenInterface $token)

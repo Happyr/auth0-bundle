@@ -17,17 +17,6 @@ class SSOToken extends AbstractToken
     private $userModel;
 
     /**
-     *
-     * @param array $userModel
-     * @param array $roles
-     */
-    public function __construct($userModel, array $roles = [])
-    {
-        $this->userModel = $userModel;
-        parent::__construct($roles);
-    }
-
-    /**
      * @return mixed
      */
     public function getAccessToken()
@@ -75,10 +64,43 @@ class SSOToken extends AbstractToken
         return $this->userModel;
     }
 
+    /**
+     * @param mixed $userModel
+     *
+     * @return SSOToken
+     */
+    public function setUserModel($userModel)
+    {
+        $this->userModel = $userModel;
 
+        return $this;
+    }
 
     public function getCredentials()
     {
         return '';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize(
+            array(
+                is_object($this->userModel) ? clone $this->userModel : $this->userModel,
+                $this->accessToken,
+                $this->expiresAt
+            )
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        list($this->userModel, $this->accessToken, $this->expiresAt) = unserialize($serialized);
+    }
+
 }
