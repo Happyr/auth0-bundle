@@ -4,6 +4,7 @@ namespace Happyr\Auth0Bundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -30,5 +31,9 @@ class HappyrAuth0Extension extends Extension
         $container->setParameter('auth0.connection', $config['connection']);
         $container->setParameter('auth0.client_id', $config['client_id']);
         $container->setParameter('auth0.client_secret', $config['client_secret']);
+
+        if (!empty($config['cache'])) {
+            $container->getDefinition('happyr.auth0.api')->addMethodCall('setCache', [new Reference($config['cache'])]);
+        }
     }
 }

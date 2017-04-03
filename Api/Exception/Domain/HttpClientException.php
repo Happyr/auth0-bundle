@@ -69,6 +69,11 @@ final class HttpClientException extends \RuntimeException implements Exception
         return new self('The endpoint you tried to access does not exist. Check your URL.', 404, $response);
     }
 
+    public static function tooManyRequests(ResponseInterface $response = null)
+    {
+        return new self('Too many request to the API. Wait a minute.', 429, $response);
+    }
+
     /**
      * @return ResponseInterface
      */

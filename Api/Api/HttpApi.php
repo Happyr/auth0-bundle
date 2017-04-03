@@ -192,6 +192,8 @@ abstract class HttpApi
                 throw DomainExceptions\HttpClientException::forbidden($response);
             case 404:
                 throw DomainExceptions\HttpClientException::notFound($response);
+            case 429:
+                throw DomainExceptions\HttpClientException::tooManyRequests($response);
             case 500 <= $statusCode:
                 throw DomainExceptions\HttpServerException::serverError($statusCode);
             default:

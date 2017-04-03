@@ -12,8 +12,11 @@ use Happyr\Auth0Bundle\Api\Api\Tweet;
 use Happyr\Auth0Bundle\Api\Hydrator\ModelHydrator;
 use Happyr\Auth0Bundle\Api\Hydrator\Hydrator;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
+use Http\Client\Common\Plugin\CachePlugin;
 use Http\Client\HttpClient;
+use Http\Discovery\StreamFactoryDiscovery;
 use Http\Message\Authentication\Bearer;
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
@@ -108,6 +111,15 @@ final class Auth0
     public function setAccessToken($accessToken)
     {
         $this->clientConfigurator->appendPlugin(new AuthenticationPlugin(new Bearer($accessToken)));
+        $this->httpClient = $this->clientConfigurator->createConfiguredClient();
+    }
+
+    public function setCache(CacheItemPoolInterface $pool)
+    {
+        $this->clientConfigurator->appendPlugin(CachePlugin::serverCache($pool, StreamFactoryDiscovery::find(), [
+            'cache_lifetime' => 60,
+            'respect_response_cache_directives' => [],
+        ]));
         $this->httpClient = $this->clientConfigurator->createConfiguredClient();
     }
 
