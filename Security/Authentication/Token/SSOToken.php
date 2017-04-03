@@ -3,12 +3,18 @@
 namespace Happyr\Auth0Bundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\Role\Role;
 
 class SSOToken extends AbstractToken
 {
     private $accessToken;
 
     private $expiresAt;
+
+    /**
+     * @var array
+     */
+    private $storedRoles = [];
 
     /**
      * The user model for the API
@@ -86,11 +92,17 @@ class SSOToken extends AbstractToken
      */
     public function serialize()
     {
+        $user = $this->getUser();
+
         return serialize(
             array(
+                is_object($user) ? clone $user : $user,
                 is_object($this->userModel) ? clone $this->userModel : $this->userModel,
+                $this->isAuthenticated(),
+                $this->getRoles(),
+                $this->getAttributes(),
                 $this->accessToken,
-                $this->expiresAt
+                $this->expiresAt,
             )
         );
     }
@@ -100,7 +112,22 @@ class SSOToken extends AbstractToken
      */
     public function unserialize($serialized)
     {
-        list($this->userModel, $this->accessToken, $this->expiresAt) = unserialize($serialized);
+        list($user, $this->userModel, $isAuthenticated, $this->storedRoles, $attributes, $this->accessToken, $this->expiresAt) = unserialize($serialized);
+        $this->setAuthenticated($isAuthenticated);
+        $this->setAttributes($attributes);
+        $this->setUser($user);
     }
 
+    public function getRoles()
+    {
+        $allRoles = array_merge(parent::getRoles(), $this->storedRoles);
+        $uniqueRoles = [];
+
+        /** @var Role $role */
+        foreach ($allRoles as $role) {
+            $uniqueRoles[$role->getRole()] = $role;
+        }
+
+        return array_values($uniqueRoles);
+    }
 }
