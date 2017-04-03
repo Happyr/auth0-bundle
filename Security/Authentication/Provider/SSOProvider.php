@@ -51,7 +51,7 @@ class SSOProvider implements AuthenticationProviderInterface
             $this->auth0->setAccessToken($token->getAccessToken());
             $userModel = $this->auth0->user()->userinfo();
         } catch (\Exception $e) {
-            throw new AuthenticationException('Could not fetch user info from Auth0');
+            throw new AuthenticationException('Could not fetch user info from Auth0', 0, $e);
         }
 
         try {

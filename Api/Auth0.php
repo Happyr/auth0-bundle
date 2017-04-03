@@ -117,7 +117,8 @@ final class Auth0
     public function setCache(CacheItemPoolInterface $pool)
     {
         $this->clientConfigurator->appendPlugin(CachePlugin::serverCache($pool, StreamFactoryDiscovery::find(), [
-            'cache_lifetime' => 60,
+            'default_ttl' => 60,
+            'cache_lifetime' => 600,
             'respect_response_cache_directives' => [],
         ]));
         $this->httpClient = $this->clientConfigurator->createConfiguredClient();

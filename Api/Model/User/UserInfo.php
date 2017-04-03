@@ -44,7 +44,19 @@ final class UserInfo implements CreatableFromArray, \ArrayAccess
      */
     function __toString()
     {
-        return $this->getName();
+        if (!empty($this->data['email'])) {
+            return $this->data['email'];
+        }
+
+        if (!empty($this->data['name'])) {
+            return $this->data['name'];
+        }
+
+        if (!empty($this->data['nickname'])) {
+            return $this->data['nickname'];
+        }
+
+        return '';
     }
 
 
