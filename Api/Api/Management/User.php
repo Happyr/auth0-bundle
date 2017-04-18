@@ -10,7 +10,7 @@ namespace Happyr\Auth0Bundle\Api\Api\Management;
 use Happyr\Auth0Bundle\Api\Api\HttpApi;
 use Happyr\Auth0Bundle\Api\Exception;
 use Happyr\Auth0Bundle\Api\Exception\InvalidArgumentException;
-use Happyr\Auth0Bundle\Api\Model\Authentication\Token as TokenModel;
+use Happyr\Auth0Bundle\Api\Model\Management\User as UserModel;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -19,15 +19,18 @@ use Psr\Http\Message\ResponseInterface;
 final class User extends HttpApi
 {
     /**
-     * @param $id
+     * Update a user. Ie user email, password or email_verified.
+     * @param $userId
      * @param array $params
      *
-     * @return mixed|ResponseInterface
+     * @return UserModel|ResponseInterface
+     *
+     * @throws Exception
      */
-    public function update($id, array $params = [])
+    public function update($userId, array $params = [])
     {
-        // TODO wrote me
-        if (empty($id)) {
+
+        if (empty($userId)) {
             throw new InvalidArgumentException('User id cannot be empty');
         }
 
@@ -35,8 +38,8 @@ final class User extends HttpApi
             'client_id' => $this->clientData->getId(),
         ];
 
-        $response = $this->httpPost('/api/v2/users/'.$id, array_merge($default, $params));
+        $response = $this->httpPost('/api/v2/users/'.$userId, array_merge($default, $params));
 
-        return $this->hydrateResponse($response, TokenModel::class);
+        return $this->hydrateResponse($response, UserModel::class);
     }
 }
