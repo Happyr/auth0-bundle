@@ -10,7 +10,7 @@ namespace Happyr\Auth0Bundle\Api\Model;
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-interface CreatableFromArray
+interface ApiResponse
 {
     /**
      * Create an API response object from the HTTP response from the API server.
@@ -19,5 +19,5 @@ interface CreatableFromArray
      *
      * @return self
      */
-    public static function create(array $data);
+    public static function create($data);
 }

@@ -7,8 +7,6 @@
 
 namespace Happyr\Auth0Bundle\Api;
 
-use Happyr\Auth0Bundle\Api\Api\Authentication;
-use Happyr\Auth0Bundle\Api\Api\Tweet;
 use Happyr\Auth0Bundle\Api\Hydrator\ModelHydrator;
 use Happyr\Auth0Bundle\Api\Hydrator\Hydrator;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
@@ -117,14 +115,15 @@ final class Auth0
     public function setCache(CacheItemPoolInterface $pool)
     {
         $this->clientConfigurator->appendPlugin(CachePlugin::serverCache($pool, StreamFactoryDiscovery::find(), [
-            'default_ttl' => 60,
-            'cache_lifetime' => 600,
+            'default_ttl' => 300,
+            'cache_lifetime' => 1200,
             'respect_response_cache_directives' => [],
         ]));
         $this->httpClient = $this->clientConfigurator->createConfiguredClient();
     }
 
     /**
+     *
      * @return Api\Authentication
      */
     public function authentication()
@@ -133,10 +132,18 @@ final class Auth0
     }
 
     /**
-     * @return Api\User
+     * @return Api\Authorization
      */
-    public function user()
+    public function authorization()
     {
-        return new Api\User($this->httpClient, $this->hydrator, $this->requestBuilder, $this->clientData);
+        return new Api\Authorization($this->httpClient, $this->hydrator, $this->requestBuilder, $this->clientData);
     }
+    /**
+     * @return Api\Management
+     */
+    public function management()
+    {
+        return new Api\Management($this->httpClient, $this->hydrator, $this->requestBuilder, $this->clientData);
+    }
+
 }

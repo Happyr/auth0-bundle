@@ -50,7 +50,7 @@ class SSOListener extends AbstractAuthenticationListener
             throw new AuthenticationException('No oauth code in the request.');
         }
 
-        $auth0Token = $this->auth0->authentication()->exchangeCodeForToken($code, [
+        $auth0Token = $this->auth0->authorization()->token()->exchangeCodeForToken($code, [
             'redirect_uri' => $this->httpUtils->generateUri($request, $this->callbackPath),
         ]);
 

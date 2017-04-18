@@ -7,12 +7,12 @@
 
 namespace Happyr\Auth0Bundle\Api\Model\User;
 
-use Happyr\Auth0Bundle\Api\Model\CreatableFromArray;
+use Happyr\Auth0Bundle\Api\Model\ApiResponse;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-final class UserInfo implements CreatableFromArray, \ArrayAccess
+final class UserInfo implements ApiResponse, \ArrayAccess
 {
     /**
      * @var array the raw data from the API.
@@ -33,7 +33,7 @@ final class UserInfo implements CreatableFromArray, \ArrayAccess
      *
      * @return self
      */
-    public static function create(array $data)
+    public static function create($data)
     {
         return new self($data);
     }

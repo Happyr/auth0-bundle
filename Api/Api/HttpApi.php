@@ -44,11 +44,10 @@ abstract class HttpApi
     protected $clientData;
 
     /**
-     *
-     * @param HttpClient $httpClient
-     * @param Hydrator $hydrator
+     * @param HttpClient     $httpClient
+     * @param Hydrator       $hydrator
      * @param RequestBuilder $requestBuilder
-     * @param ClientData $data
+     * @param ClientData     $data
      */
     public function __construct(HttpClient $httpClient, Hydrator $hydrator, RequestBuilder $requestBuilder, ClientData $data)
     {

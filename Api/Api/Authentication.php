@@ -1,45 +1,22 @@
 <?php
 
-/*
- * This software may be modified and distributed under the terms
- * of the MIT license. See the LICENSE file for details.
- */
-
 namespace Happyr\Auth0Bundle\Api\Api;
 
-use Happyr\Auth0Bundle\Api\Exception;
-use Happyr\Auth0Bundle\Api\Exception\InvalidArgumentException;
-use Happyr\Auth0Bundle\Api\Model\Authentication\Token;
-use Psr\Http\Message\ResponseInterface;
-
-/**
- * @author Tobias Nyholm <tobias.nyholm@gmail.com>
- */
-final class Authentication extends HttpApi
+class Authentication extends HttpApi
 {
     /**
-     * @param string $code
-     * @param array  $params
-     *
-     * @return Token|ResponseInterface
-     *
-     * @throws Exception
+     * @return Authentication\UserProfile
      */
-    public function exchangeCodeForToken($code, array $params = [])
+    public function userProfile()
     {
-        if (empty($code)) {
-            throw new InvalidArgumentException('Code cannot be empty');
-        }
+        return new Authentication\UserProfile($this->httpClient, $this->hydrator, $this->requestBuilder, $this->clientData);
+    }
 
-        $default = [
-            'code' => $code,
-            'grant_type' => 'authorization_code',
-            'client_secret' => $this->clientData->getSecret(),
-            'client_id' => $this->clientData->getId(),
-        ];
-
-        $response = $this->httpPost('/oauth/token', array_merge($default, $params));
-
-        return $this->hydrateResponse($response, Token::class);
+    /**
+     * @return Authentication\DbConnection
+     */
+    public function dbConnection()
+    {
+        return new Authentication\DbConnection($this->httpClient, $this->hydrator, $this->requestBuilder, $this->clientData);
     }
 }

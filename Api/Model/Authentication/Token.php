@@ -8,12 +8,12 @@
 
 namespace Happyr\Auth0Bundle\Api\Model\Authentication;
 
-use Happyr\Auth0Bundle\Api\Model\CreatableFromArray;
+use Happyr\Auth0Bundle\Api\Model\ApiResponse;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-final class Token implements CreatableFromArray
+final class Token implements ApiResponse
 {
     /**
      * @var string
@@ -61,7 +61,7 @@ final class Token implements CreatableFromArray
      *
      * @return self
      */
-    public static function create(array $data)
+    public static function create($data)
     {
         $token = new self($data['token_type'], $data['expires_in']);
 

@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Happyr\Auth0Bundle\Api\Hydrator;
 
 use Happyr\Auth0Bundle\Api\Exception\HydrationException;
-use Happyr\Auth0Bundle\Api\Model\CreatableFromArray;
+use Happyr\Auth0Bundle\Api\Model\ApiResponse;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -38,7 +38,7 @@ final class ModelHydrator implements Hydrator
             throw new HydrationException(sprintf('Error (%d) when trying to json_decode response', json_last_error()));
         }
 
-        if (is_subclass_of($class, CreatableFromArray::class)) {
+        if (is_subclass_of($class, ApiResponse::class)) {
             $object = call_user_func($class.'::create', $data);
         } else {
             $object = new $class($data);
