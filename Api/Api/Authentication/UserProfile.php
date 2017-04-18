@@ -9,7 +9,7 @@ namespace Happyr\Auth0Bundle\Api\Api\Authentication;
 
 use Happyr\Auth0Bundle\Api\Api\HttpApi;
 use Happyr\Auth0Bundle\Api\Exception;
-use Happyr\Auth0Bundle\Api\Model\User\UserInfo;
+use Happyr\Auth0Bundle\Api\Model\Authentication\UserProfile\UserInfo;
 use Psr\Http\Message\ResponseInterface;
 
 /**

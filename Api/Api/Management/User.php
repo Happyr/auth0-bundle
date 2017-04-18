@@ -19,28 +19,23 @@ use Psr\Http\Message\ResponseInterface;
 final class User extends HttpApi
 {
     /**
-     * @param string $code
-     * @param array  $params
+     * @param $id
+     * @param array $params
      *
-     * @return TokenModel|ResponseInterface
-     *
-     * @throws Exception
+     * @return mixed|ResponseInterface
      */
     public function update($id, array $params = [])
     {
         // TODO wrote me
         if (empty($id)) {
-            throw new InvalidArgumentException('Code cannot be empty');
+            throw new InvalidArgumentException('User id cannot be empty');
         }
 
         $default = [
-            'code' => $code,
-            'grant_type' => 'authorization_code',
-            'client_secret' => $this->clientData->getSecret(),
             'client_id' => $this->clientData->getId(),
         ];
 
-        $response = $this->httpPost('/oauth/token', array_merge($default, $params));
+        $response = $this->httpPost('/api/v2/users/'.$id, array_merge($default, $params));
 
         return $this->hydrateResponse($response, TokenModel::class);
     }

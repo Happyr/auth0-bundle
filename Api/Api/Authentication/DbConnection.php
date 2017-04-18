@@ -8,7 +8,7 @@
 namespace Happyr\Auth0Bundle\Api\Api\Authentication;
 
 use Happyr\Auth0Bundle\Api\Api\HttpApi;
-use Happyr\Auth0Bundle\Api\Model\DbConnection\Message;
+use Happyr\Auth0Bundle\Api\Model\Message;
 use Psr\Http\Message\ResponseInterface;
 
 /**

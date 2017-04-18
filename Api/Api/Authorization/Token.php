@@ -10,7 +10,7 @@ namespace Happyr\Auth0Bundle\Api\Api\Authorization;
 use Happyr\Auth0Bundle\Api\Api\HttpApi;
 use Happyr\Auth0Bundle\Api\Exception;
 use Happyr\Auth0Bundle\Api\Exception\InvalidArgumentException;
-use Happyr\Auth0Bundle\Api\Model\Authentication\Token as TokenModel;
+use Happyr\Auth0Bundle\Api\Model\Authorization\Token\Token as TokenModel;
 use Psr\Http\Message\ResponseInterface;
 
 /**

@@ -6,7 +6,7 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Happyr\Auth0Bundle\Api\Model\Authentication;
+namespace Happyr\Auth0Bundle\Api\Model\Authorization\Token;
 
 use Happyr\Auth0Bundle\Api\Model\ApiResponse;
 

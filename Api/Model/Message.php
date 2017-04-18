@@ -5,7 +5,7 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Happyr\Auth0Bundle\Api\Model\DbConnection;
+namespace Happyr\Auth0Bundle\Api\Model;
 
 use Happyr\Auth0Bundle\Api\Model\ApiResponse;
 
