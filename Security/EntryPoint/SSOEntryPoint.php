@@ -56,6 +56,7 @@ class SSOEntryPoint implements AuthenticationEntryPointInterface
             //'connection'=>$this->auth0Connection,
             'redirect_uri' => $this->httpUtils->generateUri($request, $this->callbackPath),
             'response_type' => 'code',
+            'language' => $request->getLocale(),
         ];
 
         return new RedirectResponse(sprintf('https://%s/authorize?%s', $this->auth0Domain, http_build_query($query)));
