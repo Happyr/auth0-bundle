@@ -10,6 +10,7 @@ namespace Happyr\Auth0Bundle\Api;
 use Happyr\Auth0Bundle\Api\Hydrator\ModelHydrator;
 use Happyr\Auth0Bundle\Api\Hydrator\Hydrator;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
+use Http\Client\Common\Plugin\Cache\Generator\HeaderCacheKeyGenerator;
 use Http\Client\Common\Plugin\CachePlugin;
 use Http\Client\HttpClient;
 use Http\Discovery\StreamFactoryDiscovery;
@@ -118,6 +119,7 @@ final class Auth0
             'default_ttl' => 300,
             'cache_lifetime' => 1200,
             'respect_response_cache_directives' => [],
+            'cache_key_generator' => new HeaderCacheKeyGenerator(['Authorization', 'Cookie', 'Accept', 'Content-type']),
         ]));
         $this->httpClient = $this->clientConfigurator->createConfiguredClient();
     }
