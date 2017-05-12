@@ -109,7 +109,7 @@ final class Auth0
 
     public function setAccessToken($accessToken)
     {
-        $this->clientConfigurator->appendPlugin(new AuthenticationPlugin(new Bearer($accessToken)));
+        $this->clientConfigurator->prependPlugin(new AuthenticationPlugin(new Bearer($accessToken)));
         $this->httpClient = $this->clientConfigurator->createConfiguredClient();
     }
 
