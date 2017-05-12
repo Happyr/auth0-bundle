@@ -30,7 +30,7 @@ final class HttpClientConfigurator
     /**
      * @var string
      */
-    private $endpoint = 'https://fake-twitter.com';
+    private $endpoint = null;
 
     /**
      * @var UriFactory
