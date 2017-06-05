@@ -5,10 +5,6 @@ services:
         factory: ['Happyr\Auth0Bundle\Api\Auth0', 'create']
         arguments: ["https://%auth0.domain%", "%auth0.client_id%", "%auth0.client_secret%"]
 
-    happyr.auth0.security.single_sign_on_authenticator:
-        class: Happyr\Auth0Bundle\Security\SingleSignOnAuthenticator
-        arguments: ["@happyr.auth0.api", "@router", "%auth0.client_id%", "%auth0.domain%", "%auth0.connection%"]
-
     happyr.auth0.security.authentication.provider.sso:
         class: Happyr\Auth0Bundle\Security\Authentication\Provider\SSOProvider
         arguments: [~, '@happyr.auth0.api']
