@@ -2,7 +2,7 @@
 
 namespace Happyr\Auth0Bundle\Api\Exception\Domain;
 
-use Happyr\ApiClient\Exception;
+use Happyr\Auth0Bundle\Api\Exception;
 use Psr\Http\Message\ResponseInterface;
 
 /**
