@@ -7,3 +7,49 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/Happyr/Auth0Bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/Happyr/Auth0Bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/auth0-bundle.svg?style=flat-square)](https://packagist.org/packages/auth0-bundle)
 
+### Installation
+
+Enable the bundle in AppKernel.php
+
+```php
+public function registerBundles()
+{
+    $bundles = [
+        // ...
+        new \Happyr\Auth0Bundle\HappyrAuth0Bundle(),
+    ];
+    
+    return $bundles;
+}       
+```
+Add your credentials: 
+
+```yaml
+// app/config/config.yml
+happyr_auth0:
+  domain: example.eu.auth0.com
+  client_id: my_client_id
+  client_secret: my_secret
+  cache: 'cache.provider.apc'
+```
+
+
+Configure your application for Singe Sign On (SSO). 
+
+```yaml
+// app/config/security.yml
+
+default:
+  pattern:  ^/.*
+  entry_point: 'happyr.auth0.security.authentication.entry_point.sso.default'
+  auth0_sso:
+    check_path: default_login_check
+    login_path: user_login
+    failure_path: startpage
+  provider: default
+  anonymous: ~
+  logout:
+    path:   default_logout
+    target: _user_logout
+    invalidate_session: true
+```
