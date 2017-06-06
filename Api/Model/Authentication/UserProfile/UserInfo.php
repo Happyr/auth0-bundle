@@ -179,4 +179,44 @@ final class UserInfo implements ApiResponse, \ArrayAccess
 
         return $this->data['roles'];
     }
+
+    /**
+     * @param string $name
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public function getAppMetadata($name, $default = null)
+    {
+        if (!isset($this->data['app_metadata'])) {
+            return $default;
+        }
+
+        if (!array_key_exists($name, $this->data['app_metadata'])) {
+            return $default;
+        }
+
+        return $this->data['app_metadata'][$name];
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public function getUserMetadata($name, $default = null)
+    {
+        if (!isset($this->data['user_metadata'])) {
+            return $default;
+        }
+
+        if (!array_key_exists($name, $this->data['user_metadata'])) {
+            return $default;
+        }
+
+        return $this->data['user_metadata'][$name];
+    }
+
+
 }
