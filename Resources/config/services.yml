@@ -1,13 +1,28 @@
 
 services:
-    happyr.auth0.api:
-        class: Happyr\Auth0Bundle\Api\Auth0
-        factory: ['Happyr\Auth0Bundle\Api\Auth0', 'create']
-        arguments: ["https://%auth0.domain%", "%auth0.client_id%", "%auth0.client_secret%"]
+    happyr.auth0.api.authentication:
+        class: Auth0\SDK\API\Authentication
+        arguments:
+            - "https://%auth0.domain%"
+            - "%auth0.client_id%"
+            - "%auth0.client_secret%"
+
+    happyr.auth0.api.management.factory:
+        class: Happyr\Auth0Bundle\Factory\ManagementFactory
+        arguments:
+            - "@auth0.cache"
+            - "@happyr.auth0.api.authentication"
+            - "%auth0.domain%"
+            - "@?logger"
+
+    happyr.auth0.api.management:
+        class: Auth0\SDK\API\Management
+        factory: ["@happyr.auth0.api.management.factory", "create"]
+        lazy: true
 
     happyr.auth0.security.authentication.provider.sso:
         class: Happyr\Auth0Bundle\Security\Authentication\Provider\SSOProvider
-        arguments: [~, '@happyr.auth0.api']
+        arguments: [~, '@happyr.auth0.api.authentication']
         public: false
 
     happyr.auth0.security.authentication.listener.sso:
@@ -15,7 +30,7 @@ services:
         parent: security.authentication.listener.abstract
         abstract: true
         calls:
-          - [ 'setAuth0', ["@happyr.auth0.api"]]
+          - [ 'setAuthenticationApi', ["@happyr.auth0.api.authentication"]]
 
     happyr.auth0.security.authentication.entry_point.oauth:
         class: Happyr\Auth0Bundle\Security\EntryPoint\SSOEntryPoint

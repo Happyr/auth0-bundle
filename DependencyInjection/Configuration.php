@@ -24,8 +24,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('connection')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('client_id')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('client_secret')->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('cache')->defaultNull()->end()
-
+                ->scalarNode('cache')->isRequired()->cannotBeEmpty()->end()
             ->end();
 
         return $treeBuilder;

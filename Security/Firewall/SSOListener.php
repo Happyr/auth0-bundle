@@ -2,7 +2,8 @@
 
 namespace Happyr\Auth0Bundle\Security\Firewall;
 
-use Happyr\Auth0Bundle\Api\Auth0;
+use Auth0\SDK\API\Authentication;
+use Happyr\Auth0Bundle\Api\Model\Authorization\Token\Token;
 use Happyr\Auth0Bundle\Security\Authentication\Token\SSOToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -15,9 +16,9 @@ use Symfony\Component\Security\Http\HttpUtils;
 class SSOListener extends AbstractAuthenticationListener
 {
     /**
-     * @var Auth0
+     * @var Authentication
      */
-    private $auth0;
+    private $authenticationApi;
 
     /**
      * @var string
@@ -27,9 +28,9 @@ class SSOListener extends AbstractAuthenticationListener
     /**
      * @param Auth0 $auth0
      */
-    public function setAuth0($auth0)
+    public function setAuthenticationApi($authenticationApi)
     {
-        $this->auth0 = $auth0;
+        $this->authenticationApi = $authenticationApi;
     }
 
     /**
@@ -50,9 +51,9 @@ class SSOListener extends AbstractAuthenticationListener
             throw new AuthenticationException('No oauth code in the request.');
         }
 
-        $auth0Token = $this->auth0->authorization()->token()->exchangeCodeForToken($code, [
-            'redirect_uri' => $this->httpUtils->generateUri($request, $this->callbackPath),
-        ]);
+        $auth0Token = Token::create($this->authenticationApi
+            ->code_exchange($code, $this->httpUtils->generateUri($request, $this->callbackPath)));
+
 
         $token = new SSOToken();
         $token->setAccessToken($auth0Token->getAccessToken())

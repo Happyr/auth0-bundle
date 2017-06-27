@@ -32,8 +32,6 @@ class HappyrAuth0Extension extends Extension
         $container->setParameter('auth0.client_id', $config['client_id']);
         $container->setParameter('auth0.client_secret', $config['client_secret']);
 
-        if (!empty($config['cache'])) {
-            $container->getDefinition('happyr.auth0.api')->addMethodCall('setCache', [new Reference($config['cache'])]);
-        }
+        $container->setAlias('auth0.cache', $config['cache']);
     }
 }

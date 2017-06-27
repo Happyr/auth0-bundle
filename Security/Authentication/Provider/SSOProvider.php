@@ -2,7 +2,8 @@
 
 namespace Happyr\Auth0Bundle\Security\Authentication\Provider;
 
-use Happyr\Auth0Bundle\Api\Auth0;
+use Auth0\SDK\API\Authentication;
+use Happyr\Auth0Bundle\Api\Model\Authentication\UserProfile\UserInfo;
 use Happyr\Auth0Bundle\Security\Authentication\Token\SSOToken;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -24,19 +25,19 @@ class SSOProvider implements AuthenticationProviderInterface
     private $userProvider;
 
     /**
-     * @var Auth0
+     * @var Authentication
      */
-    private $auth0;
+    private $authenticationApi;
 
     /**
      *
      * @param UserProviderInterface $userProvider
-     * @param Auth0 $auth0
+     * @param Authentication $authenticationApi
      */
-    public function __construct(UserProviderInterface $userProvider, Auth0 $auth0)
+    public function __construct(UserProviderInterface $userProvider, Authentication $authenticationApi)
     {
         $this->userProvider = $userProvider;
-        $this->auth0 = $auth0;
+        $this->authenticationApi = $authenticationApi;
     }
 
 
@@ -49,8 +50,8 @@ class SSOProvider implements AuthenticationProviderInterface
     {
         try {
             // Fetch info from the user
-            $this->auth0->setAccessToken($token->getAccessToken());
-            $userModel = $this->auth0->authentication()->userProfile()->userinfo();
+            $userInfo = $this->authenticationApi->userinfo($token->getAccessToken());
+            $userModel = UserInfo::create($userInfo);
         } catch (\Exception $e) {
             throw new AuthenticationException('Could not fetch user info from Auth0', 0, $e);
         }
