@@ -8,6 +8,8 @@ use Happyr\Auth0Bundle\Model\Authorization\Token\Token;
 use Happyr\Auth0Bundle\Security\Authentication\Token\SSOToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\Security\Http\HttpUtils;
 
@@ -25,6 +27,16 @@ class SSOListener extends AbstractAuthenticationListener
      * @var string
      */
     private $callbackPath;
+
+    /**
+     * @var CsrfTokenManager
+     */
+    private $csrfTokenManager;
+
+    public function setCsrfTokenManager(CsrfTokenManager $csrfTokenManager)
+    {
+        $this->csrfTokenManager = $csrfTokenManager;
+    }
 
     /**
      * @param Authentication $authenticationApi
@@ -50,6 +62,14 @@ class SSOListener extends AbstractAuthenticationListener
     {
         if (null === $code = $request->query->get('code')) {
             throw new AuthenticationException('No oauth code in the request.');
+        }
+
+        if (null === $state = $request->query->get('state')) {
+            throw new AuthenticationException('No state in the request.');
+        }
+
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('auth0-sso', $state))) {
+            throw new AuthenticationException('Invalid CSRF token');
         }
 
         $tokenStruct = $this->authenticationApi
