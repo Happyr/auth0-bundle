@@ -5,9 +5,9 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Happyr\Auth0Bundle\Api\Model\Management;
+namespace Happyr\Auth0Bundle\Model\Management;
 
-use Happyr\Auth0Bundle\Api\Model\ApiResponse;
+use Happyr\Auth0Bundle\Model\ApiResponse;
 
 final class User implements ApiResponse
 {

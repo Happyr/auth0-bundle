@@ -19,7 +19,7 @@ class ManagementFactory
     /**
      * ManagementFactory constructor.
      */
-    public function __construct(CacheItemPoolInterface $cacheItemPool, Authentication $authentication, $domain, LoggerInterface $logger = null)
+    public function __construct(?CacheItemPoolInterface $cacheItemPool, Authentication $authentication, $domain, LoggerInterface $logger = null)
     {
         $this->cacheItemPool = $cacheItemPool;
         $this->authentication = $authentication;
@@ -29,27 +29,54 @@ class ManagementFactory
 
     public function create()
     {
+        if ($this->cacheItemPool) {
+            $accessToken = $this->getCachedAccessToken();
+        } else {
+            $accessToken = $this->getUncachedAccessToken();
+        }
+
+        return new Management($accessToken, $this->domain);
+    }
+
+    protected function getCachedAccessToken(): string
+    {
         $item = $this->cacheItemPool->getItem('auth0_management_access_token');
 
         if (!$item->isHit()) {
-            $token = $this->authentication->oauth_token([
-                'grant_type' => 'client_credentials',
-                'audience' => sprintf('https://%s/api/v2/', $this->domain),
-            ]);
-
-            if (isset($token['error'])) {
-                throw new CoreException($token['error_description']);
-            }
-
-            if ($this->logger) {
-                $this->logger->debug("Got new access token for Auth0 managment API. Scope: ".$token['scope']);
-            }
+            $token = $this->getTokenStruct();
 
             $item->set($token['access_token']);
             $item->expiresAfter((int)$token['expires_in']);
             $this->cacheItemPool->save($item);
         }
 
-        return new Management($item->get(), $this->domain);
+        return $item->get();
+    }
+
+    protected function getUncachedAccessToken(): string
+    {
+        if ($this->logger) {
+            $this->logger->warning("Using the Auth0 management API without using an access token cache. This increases the number of API requests.");
+        }
+
+        return $this->getTokenStruct()['access_token'];
+    }
+
+    protected function getTokenStruct(): array
+    {
+        $token = $this->authentication->oauth_token([
+            'grant_type' => 'client_credentials',
+            'audience' => sprintf('https://%s/api/v2/', $this->domain),
+        ]);
+
+        if (isset($token['error'])) {
+            throw new CoreException($token['error_description']);
+        }
+
+        if ($this->logger) {
+            $this->logger->debug("Got new access token for Auth0 managment API. Scope: ".$token['scope']);
+        }
+
+        return $token;
     }
 }

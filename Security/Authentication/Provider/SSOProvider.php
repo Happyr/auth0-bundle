@@ -3,7 +3,7 @@
 namespace Happyr\Auth0Bundle\Security\Authentication\Provider;
 
 use Auth0\SDK\API\Authentication;
-use Happyr\Auth0Bundle\Api\Model\Authentication\UserProfile\UserInfo;
+use Happyr\Auth0Bundle\Model\Authentication\UserProfile\UserInfo;
 use Happyr\Auth0Bundle\Security\Authentication\Token\SSOToken;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;

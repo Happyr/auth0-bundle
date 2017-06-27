@@ -3,7 +3,8 @@
 namespace Happyr\Auth0Bundle\Security\Firewall;
 
 use Auth0\SDK\API\Authentication;
-use Happyr\Auth0Bundle\Api\Model\Authorization\Token\Token;
+use Auth0\SDK\Exception\CoreException;
+use Happyr\Auth0Bundle\Model\Authorization\Token\Token;
 use Happyr\Auth0Bundle\Security\Authentication\Token\SSOToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -26,7 +27,7 @@ class SSOListener extends AbstractAuthenticationListener
     private $callbackPath;
 
     /**
-     * @param Auth0 $auth0
+     * @param Authentication $authenticationApi
      */
     public function setAuthenticationApi($authenticationApi)
     {
@@ -51,9 +52,19 @@ class SSOListener extends AbstractAuthenticationListener
             throw new AuthenticationException('No oauth code in the request.');
         }
 
-        $auth0Token = Token::create($this->authenticationApi
-            ->code_exchange($code, $this->httpUtils->generateUri($request, $this->callbackPath)));
+        $tokenStruct = $this->authenticationApi
+            ->code_exchange($code, $this->httpUtils->generateUri($request, $this->callbackPath));
 
+        if (isset($tokenStruct['error'])) {
+            switch ($tokenStruct['error']) {
+                case 'invalid_grant':
+                    throw new AuthenticationException($tokenStruct['error_description']);
+                default:
+                    throw new CoreException($tokenStruct['error_description']);
+            }
+        }
+
+        $auth0Token = Token::create($tokenStruct);
 
         $token = new SSOToken();
         $token->setAccessToken($auth0Token->getAccessToken())

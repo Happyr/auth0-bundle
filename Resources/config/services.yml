@@ -10,10 +10,12 @@ services:
     happyr.auth0.api.management.factory:
         class: Happyr\Auth0Bundle\Factory\ManagementFactory
         arguments:
-            - "@auth0.cache"
+            - "@?auth0.cache"
             - "@happyr.auth0.api.authentication"
             - "%auth0.domain%"
             - "@?logger"
+        tags:
+            - { name: monolog.logger, channel: happyr_auth0 }
 
     happyr.auth0.api.management:
         class: Auth0\SDK\API\Management
