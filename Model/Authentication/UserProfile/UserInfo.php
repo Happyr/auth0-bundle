@@ -99,6 +99,18 @@ final class UserInfo implements ApiResponse, \ArrayAccess
     /**
      * @return string
      */
+    public function getUsername()
+    {
+        if (!isset($this->data['username'])) {
+            return null;
+        }
+
+        return $this->data['username'];
+    }
+
+    /**
+     * @return string
+     */
     public function getClientId()
     {
         return $this->data['clientID'];
