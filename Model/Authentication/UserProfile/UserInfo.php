@@ -42,18 +42,18 @@ final class UserInfo implements ApiResponse, \ArrayAccess
      *
      * @return string
      */
-    function __toString()
+    public function __toString()
     {
         if (!empty($this->data['email'])) {
-            return $this->data['email'];
+            return (string)$this->data['email'];
         }
 
         if (!empty($this->data['name'])) {
-            return $this->data['name'];
+            return (string)$this->data['name'];
         }
 
         if (!empty($this->data['nickname'])) {
-            return $this->data['nickname'];
+            return (string)$this->data['nickname'];
         }
 
         return '';
