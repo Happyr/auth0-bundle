@@ -34,5 +34,12 @@ class HappyrAuth0Extension extends Extension
         if ($config['cache']) {
             $container->setAlias('auth0.cache', $config['cache']);
         }
+
+        if ($config['httplug_client_id']) {
+            $container->getDefinition('happyr.auth0.api.authentication')
+                ->replaceArgument(5, new Reference($config['httplug_client_id']));
+            $container->getDefinition('happyr.auth0.api.management.factory')
+                ->replaceArgument(3, new Reference($config['httplug_client_id']));
+        }
     }
 }

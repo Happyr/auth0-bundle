@@ -6,6 +6,9 @@ services:
             - "https://%auth0.domain%"
             - "%auth0.client_id%"
             - "%auth0.client_secret%"
+            - ~ #audience
+            - ~ #scope
+            - ~ #httpclient
 
     happyr.auth0.api.management.factory:
         class: Happyr\Auth0Bundle\Factory\ManagementFactory
@@ -13,6 +16,7 @@ services:
             - "@?auth0.cache"
             - "@happyr.auth0.api.authentication"
             - "%auth0.domain%"
+            - ~ #httpclient
             - "@?logger"
         tags:
             - { name: monolog.logger, channel: happyr_auth0 }

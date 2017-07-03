@@ -6,6 +6,7 @@ namespace Happyr\Auth0Bundle\Factory;
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Exception\CoreException;
+use Http\Client\HttpClient;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 
@@ -14,16 +15,23 @@ class ManagementFactory
     protected $cacheItemPool;
     protected $authentication;
     protected $domain;
+    protected $httpClient;
     protected $logger;
 
     /**
      * ManagementFactory constructor.
      */
-    public function __construct(?CacheItemPoolInterface $cacheItemPool, Authentication $authentication, $domain, LoggerInterface $logger = null)
-    {
+    public function __construct(
+        ?CacheItemPoolInterface $cacheItemPool,
+        Authentication $authentication,
+        $domain,
+        ?HttpClient $httpClient = null,
+        ?LoggerInterface $logger = null
+    ) {
         $this->cacheItemPool = $cacheItemPool;
         $this->authentication = $authentication;
         $this->domain = $domain;
+        $this->httpClient = $httpClient;
         $this->logger = $logger;
     }
 
@@ -35,7 +43,7 @@ class ManagementFactory
             $accessToken = $this->getUncachedAccessToken();
         }
 
-        return new Management($accessToken, $this->domain);
+        return new Management($accessToken, $this->domain, $this->httpClient);
     }
 
     protected function getCachedAccessToken(): string
