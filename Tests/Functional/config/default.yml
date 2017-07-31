@@ -2,8 +2,6 @@ framework:
   secret: 'abc'
   csrf_protection:
     enabled: true
-#  annotations:
-#    enabled: false
 
 happyr_auth0:
   domain: 'foo.com'
