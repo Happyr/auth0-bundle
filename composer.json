@@ -20,7 +20,7 @@
         "php-http/discovery": "^1.0",
         "php-http/message": "^1.0",
         "php-http/cache-plugin": "^1.3",
-        "auth0/auth0-php": "dev-6.x.x-dev"
+        "auth0/auth0-php": "6.0.0-alpha.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.5 || ^5.4",

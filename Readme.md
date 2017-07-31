@@ -9,6 +9,12 @@
 
 ### Installation
 
+Install with Composer: 
+
+```bash
+composer require happyr/auth0-bundle auth0/auth0-php:@alpha php-http/message php-http/guzzle6-adapter 
+```
+
 Enable the bundle in AppKernel.php
 
 ```php
