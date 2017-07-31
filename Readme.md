@@ -7,6 +7,10 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/Happyr/Auth0Bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/Happyr/Auth0Bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/auth0-bundle.svg?style=flat-square)](https://packagist.org/packages/auth0-bundle)
 
+### Warning
+
+This bundle is in very early development. However, it is being used in production for at least 3 applications. 
+
 ### Installation
 
 Install with Composer: 
