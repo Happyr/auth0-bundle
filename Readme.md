@@ -1,11 +1,11 @@
 # Auth0 integration with Symfony
 
-[![Latest Version](https://img.shields.io/github/release/Happyr/Auth0Bundle.svg?style=flat-square)](https://github.com/Happyr/Auth0Bundle/releases)
+[![Latest Version](https://img.shields.io/github/release/Happyr/auth0-bundle.svg?style=flat-square)](https://github.com/Happyr/auth0-bundle/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Build Status](https://img.shields.io/travis/Happyr/Auth0Bundle.svg?style=flat-square)](https://travis-ci.org/Happyr/Auth0Bundle)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/Happyr/Auth0Bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/Happyr/Auth0Bundle)
-[![Quality Score](https://img.shields.io/scrutinizer/g/Happyr/Auth0Bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/Happyr/Auth0Bundle)
-[![Total Downloads](https://img.shields.io/packagist/dt/auth0-bundle.svg?style=flat-square)](https://packagist.org/packages/auth0-bundle)
+[![Build Status](https://img.shields.io/travis/Happyr/auth0-bundle.svg?style=flat-square)](https://travis-ci.org/Happyr/auth0-bundle)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/Happyr/auth0-bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/Happyr/auth0-bundle)
+[![Quality Score](https://img.shields.io/scrutinizer/g/Happyr/auth0-bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/Happyr/auth0-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/happyr/auth0-bundle.svg?style=flat-square)](https://packagist.org/packages/happyr/auth0-bundle)
 
 ### Warning
 
