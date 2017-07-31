@@ -48,18 +48,19 @@ Configure your application for Singe Sign On (SSO).
 
 ```yaml
 // app/config/security.yml
-
-default:
-  pattern:  ^/.*
-  entry_point: 'happyr.auth0.security.authentication.entry_point.sso.default'
-  auth0_sso:
-    check_path: default_login_check
-    login_path: user_login
-    failure_path: startpage
-  provider: default
-  anonymous: ~
-  logout:
-    path:   default_logout
-    target: _user_logout
-    invalidate_session: true
+security:
+  firewalls:
+    default:
+      pattern:  ^/.*
+      entry_point: 'happyr.auth0.security.authentication.entry_point.sso.default'
+      auth0_sso:
+        check_path: default_login_check
+        login_path: user_login
+        failure_path: startpage
+      provider: default
+      anonymous: ~
+      logout:
+        path:   default_logout
+        target: _user_logout
+        invalidate_session: true
 ```

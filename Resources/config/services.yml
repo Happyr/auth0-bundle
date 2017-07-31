@@ -13,9 +13,9 @@ services:
     happyr.auth0.api.management.factory:
         class: Happyr\Auth0Bundle\Factory\ManagementFactory
         arguments:
-            - "@?auth0.cache"
             - "@happyr.auth0.api.authentication"
             - "%auth0.domain%"
+            - "@?auth0.cache"
             - ~ #httpclient
             - "@?logger"
         tags:
