@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Happyr\Auth0Bundle\Factory;
 
 use Auth0\SDK\API\Authentication;
@@ -13,19 +11,38 @@ use Psr\Log\LoggerInterface;
 
 class ManagementFactory
 {
-    protected $cacheItemPool;
-    protected $authentication;
-    protected $domain;
-    protected $httpClient;
-    protected $logger;
+    /**
+     * @var CacheItemPoolInterface|null
+     */
+    private $cacheItemPool;
+
+    /**
+     * @var Authentication
+     */
+    private $authentication;
+
+    /**
+     * @var string
+     */
+    private $domain;
+
+    /**
+     * @var HttpClient|null
+     */
+    private $httpClient;
+
+    /**
+     * @var LoggerInterface|null
+     */
+    private $logger;
 
     /**
      * ManagementFactory constructor.
      */
     public function __construct(
-        CacheItemPoolInterface $cacheItemPool,
         Authentication $authentication,
         $domain,
+        CacheItemPoolInterface $cacheItemPool = null,
         HttpClient $httpClient = null,
         LoggerInterface $logger = null
     ) {
@@ -87,8 +104,7 @@ class ManagementFactory
      */
     protected function getTokenStruct()
     {
-        $token = $this->authentication->oauth_token([
-            'grant_type' => 'client_credentials',
+        $token = $this->authentication->clientCredentials([
             'audience' => sprintf('https://%s/api/v2/', $this->domain),
         ]);
 

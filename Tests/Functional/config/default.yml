@@ -1,0 +1,40 @@
+framework:
+  secret: 'abc'
+  csrf_protection:
+    enabled: true
+#  annotations:
+#    enabled: false
+
+happyr_auth0:
+  domain: 'foo.com'
+  client_id: 'client_id'
+  client_secret: 'secret'
+  httplug_client_service: 'app.test.httplug'
+
+security:
+  providers:
+    default:
+      memory:
+        users:
+          foo:
+            password: bar
+            roles: 'ROLE_USER'
+  firewalls:
+    default:
+      pattern:  ^/.*
+      entry_point: 'happyr.auth0.security.authentication.entry_point.sso.default'
+      auth0_sso:
+        check_path: default_login_check
+        login_path: user_login
+        failure_path: startpage
+      provider: default
+      anonymous: ~
+      logout:
+        path:   default_logout
+        target: _user_logout
+        invalidate_session: true
+
+services:
+  app.test.httplug:
+    class: Http\Mock\Client
+    factory: 'Happyr\Auth0Bundle\Tests\Functional\MockedClientFactory::create'
