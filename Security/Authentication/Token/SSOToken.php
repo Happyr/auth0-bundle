@@ -17,7 +17,8 @@ class SSOToken extends AbstractToken
     private $storedRoles = [];
 
     /**
-     * The user model for the API
+     * The user model for the API.
+     *
      * @var mixed
      */
     private $userModel;
@@ -95,7 +96,7 @@ class SSOToken extends AbstractToken
         $user = $this->getUser();
 
         return serialize(
-            array(
+            [
                 is_object($user) ? clone $user : $user,
                 is_object($this->userModel) ? clone $this->userModel : $this->userModel,
                 $this->isAuthenticated(),
@@ -103,7 +104,7 @@ class SSOToken extends AbstractToken
                 $this->getAttributes(),
                 $this->accessToken,
                 $this->expiresAt,
-            )
+            ]
         );
     }
 
