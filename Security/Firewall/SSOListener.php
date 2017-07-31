@@ -2,10 +2,14 @@
 
 namespace Happyr\Auth0Bundle\Security\Firewall;
 
-use Happyr\Auth0Bundle\Api\Auth0;
+use Auth0\SDK\API\Authentication;
+use Auth0\SDK\Exception\CoreException;
+use Happyr\Auth0Bundle\Model\Authorization\Token\Token;
 use Happyr\Auth0Bundle\Security\Authentication\Token\SSOToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\Security\Http\HttpUtils;
 
@@ -15,9 +19,9 @@ use Symfony\Component\Security\Http\HttpUtils;
 class SSOListener extends AbstractAuthenticationListener
 {
     /**
-     * @var Auth0
+     * @var Authentication
      */
-    private $auth0;
+    private $authenticationApi;
 
     /**
      * @var string
@@ -25,11 +29,21 @@ class SSOListener extends AbstractAuthenticationListener
     private $callbackPath;
 
     /**
-     * @param Auth0 $auth0
+     * @var CsrfTokenManager
      */
-    public function setAuth0($auth0)
+    private $csrfTokenManager;
+
+    public function setCsrfTokenManager(CsrfTokenManager $csrfTokenManager)
     {
-        $this->auth0 = $auth0;
+        $this->csrfTokenManager = $csrfTokenManager;
+    }
+
+    /**
+     * @param Authentication $authenticationApi
+     */
+    public function setAuthenticationApi($authenticationApi)
+    {
+        $this->authenticationApi = $authenticationApi;
     }
 
     /**
@@ -50,9 +64,27 @@ class SSOListener extends AbstractAuthenticationListener
             throw new AuthenticationException('No oauth code in the request.');
         }
 
-        $auth0Token = $this->auth0->authorization()->token()->exchangeCodeForToken($code, [
-            'redirect_uri' => $this->httpUtils->generateUri($request, $this->callbackPath),
-        ]);
+        if (null === $state = $request->query->get('state')) {
+            throw new AuthenticationException('No state in the request.');
+        }
+
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('auth0-sso', $state))) {
+            throw new AuthenticationException('Invalid CSRF token');
+        }
+
+        $tokenStruct = $this->authenticationApi
+            ->code_exchange($code, $this->httpUtils->generateUri($request, $this->callbackPath));
+
+        if (isset($tokenStruct['error'])) {
+            switch ($tokenStruct['error']) {
+                case 'invalid_grant':
+                    throw new AuthenticationException($tokenStruct['error_description']);
+                default:
+                    throw new CoreException($tokenStruct['error_description']);
+            }
+        }
+
+        $auth0Token = Token::create($tokenStruct);
 
         $token = new SSOToken();
         $token->setAccessToken($auth0Token->getAccessToken())

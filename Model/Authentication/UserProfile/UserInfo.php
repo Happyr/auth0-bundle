@@ -5,9 +5,9 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Happyr\Auth0Bundle\Api\Model\Authentication\UserProfile;
+namespace Happyr\Auth0Bundle\Model\Authentication\UserProfile;
 
-use Happyr\Auth0Bundle\Api\Model\ApiResponse;
+use Happyr\Auth0Bundle\Model\ApiResponse;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
@@ -42,18 +42,18 @@ final class UserInfo implements ApiResponse, \ArrayAccess
      *
      * @return string
      */
-    function __toString()
+    public function __toString()
     {
         if (!empty($this->data['email'])) {
-            return $this->data['email'];
+            return (string)$this->data['email'];
         }
 
         if (!empty($this->data['name'])) {
-            return $this->data['name'];
+            return (string)$this->data['name'];
         }
 
         if (!empty($this->data['nickname'])) {
-            return $this->data['nickname'];
+            return (string)$this->data['nickname'];
         }
 
         return '';
@@ -94,6 +94,18 @@ final class UserInfo implements ApiResponse, \ArrayAccess
     public function getEmail()
     {
         return $this->data['email'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        if (!isset($this->data['username'])) {
+            return null;
+        }
+
+        return $this->data['username'];
     }
 
     /**

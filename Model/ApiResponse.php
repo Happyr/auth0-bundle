@@ -5,7 +5,7 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Happyr\Auth0Bundle\Api\Model;
+namespace Happyr\Auth0Bundle\Model;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
