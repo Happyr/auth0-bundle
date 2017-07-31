@@ -58,7 +58,7 @@ class SSOEntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        $csrfToken = $this->csrfTokenManager->getToken("auth0-sso");
+        $csrfToken = $this->csrfTokenManager->getToken('auth0-sso');
 
         $query = [
             'client_id' => $this->auth0ClientId,

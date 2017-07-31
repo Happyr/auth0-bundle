@@ -30,16 +30,14 @@ class SSOProvider implements AuthenticationProviderInterface
     private $authenticationApi;
 
     /**
-     *
      * @param UserProviderInterface $userProvider
-     * @param Authentication $authenticationApi
+     * @param Authentication        $authenticationApi
      */
     public function __construct(UserProviderInterface $userProvider, Authentication $authenticationApi)
     {
         $this->userProvider = $userProvider;
         $this->authenticationApi = $authenticationApi;
     }
-
 
     /**
      * @param SSOToken $token

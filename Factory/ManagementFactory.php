@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Happyr\Auth0Bundle\Factory;
@@ -60,7 +61,7 @@ class ManagementFactory
             $token = $this->getTokenStruct();
 
             $item->set($token['access_token']);
-            $item->expiresAfter((int)$token['expires_in']);
+            $item->expiresAfter((int) $token['expires_in']);
             $this->cacheItemPool->save($item);
         }
 
@@ -73,7 +74,7 @@ class ManagementFactory
     protected function getUncachedAccessToken()
     {
         if ($this->logger) {
-            $this->logger->warning("Using the Auth0 management API without using an access token cache. This increases the number of API requests.");
+            $this->logger->warning('Using the Auth0 management API without using an access token cache. This increases the number of API requests.');
         }
 
         return $this->getTokenStruct()['access_token'];
@@ -81,6 +82,7 @@ class ManagementFactory
 
     /**
      * @return array
+     *
      * @throws CoreException
      */
     protected function getTokenStruct()
@@ -95,7 +97,7 @@ class ManagementFactory
         }
 
         if ($this->logger) {
-            $this->logger->debug("Got new access token for Auth0 managment API. Scope: ".$token['scope']);
+            $this->logger->debug('Got new access token for Auth0 managment API. Scope: '.$token['scope']);
         }
 
         return $token;

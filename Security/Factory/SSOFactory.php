@@ -24,7 +24,6 @@ class SSOFactory extends AbstractFactory
         return $providerId;
     }
 
-
     protected function createEntryPoint($container, $id, $config, $defaultEntryPoint)
     {
         $entryPointId = 'happyr.auth0.security.authentication.entry_point.sso.'.$id;
@@ -54,7 +53,6 @@ class SSOFactory extends AbstractFactory
 
         return $listenerId;
     }
-
 
     protected function getListenerId()
     {

@@ -15,6 +15,4 @@ final class User implements ApiResponse
     {
         // TODO: Implement create() method.
     }
-
-
 }
