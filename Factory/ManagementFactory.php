@@ -22,11 +22,11 @@ class ManagementFactory
      * ManagementFactory constructor.
      */
     public function __construct(
-        ?CacheItemPoolInterface $cacheItemPool,
+        CacheItemPoolInterface $cacheItemPool,
         Authentication $authentication,
         $domain,
-        ?HttpClient $httpClient = null,
-        ?LoggerInterface $logger = null
+        HttpClient $httpClient = null,
+        LoggerInterface $logger = null
     ) {
         $this->cacheItemPool = $cacheItemPool;
         $this->authentication = $authentication;
@@ -35,6 +35,9 @@ class ManagementFactory
         $this->logger = $logger;
     }
 
+    /**
+     * @return Management
+     */
     public function create()
     {
         if ($this->cacheItemPool) {
@@ -46,7 +49,10 @@ class ManagementFactory
         return new Management($accessToken, $this->domain, $this->httpClient);
     }
 
-    protected function getCachedAccessToken(): string
+    /**
+     * @return string
+     */
+    protected function getCachedAccessToken()
     {
         $item = $this->cacheItemPool->getItem('auth0_management_access_token');
 
@@ -61,7 +67,10 @@ class ManagementFactory
         return $item->get();
     }
 
-    protected function getUncachedAccessToken(): string
+    /**
+     * @return string
+     */
+    protected function getUncachedAccessToken()
     {
         if ($this->logger) {
             $this->logger->warning("Using the Auth0 management API without using an access token cache. This increases the number of API requests.");
@@ -70,7 +79,11 @@ class ManagementFactory
         return $this->getTokenStruct()['access_token'];
     }
 
-    protected function getTokenStruct(): array
+    /**
+     * @return array
+     * @throws CoreException
+     */
+    protected function getTokenStruct()
     {
         $token = $this->authentication->oauth_token([
             'grant_type' => 'client_credentials',
