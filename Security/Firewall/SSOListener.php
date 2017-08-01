@@ -72,7 +72,7 @@ class SSOListener extends AbstractAuthenticationListener
         }
 
         $tokenStruct = $this->authenticationApi
-            ->code_exchange($code, $this->httpUtils->generateUri($request, $this->callbackPath));
+            ->codeExchange($code, $this->httpUtils->generateUri($request, $this->callbackPath));
 
         if (isset($tokenStruct['error'])) {
             switch ($tokenStruct['error']) {

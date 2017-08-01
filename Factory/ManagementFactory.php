@@ -113,7 +113,7 @@ class ManagementFactory
         }
 
         if ($this->logger) {
-            $this->logger->debug('Got new access token for Auth0 managment API. Scope: '.$token['scope']);
+            $this->logger->debug(sprintf('Got new access token for Auth0 managment API. Scope: "%s" ', $token['scope'] ?? 'no scope'));
         }
 
         return $token;

@@ -62,7 +62,6 @@ class SSOEntryPoint implements AuthenticationEntryPointInterface
 
         $query = [
             'client_id' => $this->auth0ClientId,
-            //'connection'=>$this->auth0Connection,
             'redirect_uri' => $this->httpUtils->generateUri($request, $this->callbackPath),
             'response_type' => 'code',
             'language' => $request->getLocale(),
