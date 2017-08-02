@@ -114,11 +114,11 @@ class SSOToken extends AbstractToken
     public function unserialize($serialized)
     {
         list($user, $this->userModel, $isAuthenticated, $this->storedRoles, $attributes, $this->accessToken, $this->expiresAt) = unserialize($serialized);
-        $this->setAuthenticated($isAuthenticated);
-        $this->setAttributes($attributes);
         if ($user) {
             $this->setUser($user);
         }
+        $this->setAuthenticated($isAuthenticated);
+        $this->setAttributes($attributes);
     }
 
     public function getRoles()

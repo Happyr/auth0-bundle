@@ -57,7 +57,7 @@ class SSOProvider implements AuthenticationProviderInterface
         try {
             $user = $this->userProvider->loadUserByUsername(null !== $userModel ? $userModel : $token->getUsername());
         } catch (UsernameNotFoundException $e) {
-            throw new UnsupportedUserException();
+            throw new UnsupportedUserException("Unsupported user.", 0, $e);
         }
 
         if (!$user) {
