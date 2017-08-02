@@ -104,9 +104,17 @@ class ManagementFactory
      */
     protected function getTokenStruct()
     {
-        $token = $this->authentication->clientCredentials([
-            'audience' => sprintf('https://%s/api/v2/', $this->domain),
-        ]);
+        try {
+            $token = $this->authentication->clientCredentials(
+                [
+                    'audience' => sprintf('https://%s/api/v2/', $this->domain),
+                ]
+            );
+        } catch (\Auth0\SDK\Exception $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw new CoreException('Could not get access token', 0, $e);
+        }
 
         if (isset($token['error'])) {
             throw new CoreException($token['error_description']);
@@ -117,7 +125,7 @@ class ManagementFactory
         }
 
         if ($this->logger) {
-            $this->logger->debug(sprintf('Got new access token for Auth0 managment API. Scope: "%s" ', isset($token['scope']) ? $token['scope'] : 'no scope'));
+            $this->logger->debug(sprintf('Got new access token for Auth0 management API. Scope: "%s" ', isset($token['scope']) ? $token['scope'] : 'no scope'));
         }
 
         return $token;
