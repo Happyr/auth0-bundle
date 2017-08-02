@@ -112,6 +112,10 @@ class ManagementFactory
             throw new CoreException($token['error_description']);
         }
 
+        if (empty($token['access_token'])) {
+            throw new CoreException('Could not get access token');
+        }
+
         if ($this->logger) {
             $this->logger->debug(sprintf('Got new access token for Auth0 managment API. Scope: "%s" ', isset($token['scope']) ? $token['scope'] : 'no scope'));
         }
