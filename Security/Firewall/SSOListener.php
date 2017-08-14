@@ -3,6 +3,7 @@
 namespace Happyr\Auth0Bundle\Security\Firewall;
 
 use Auth0\SDK\API\Authentication;
+use Auth0\SDK\Exception;
 use Auth0\SDK\Exception\CoreException;
 use Happyr\Auth0Bundle\Model\Authorization\Token\Token;
 use Happyr\Auth0Bundle\Security\Authentication\Token\SSOToken;
@@ -71,9 +72,15 @@ class SSOListener extends AbstractAuthenticationListener
             throw new AuthenticationException('Invalid CSRF token');
         }
 
-        $tokenStruct = $this->authenticationApi
-            ->codeExchange($code, $this->httpUtils->generateUri($request, $this->callbackPath));
 
+        try {
+            $redirectUri = $this->httpUtils->generateUri($request, $this->callbackPath);
+            $tokenStruct = $this->authenticationApi->codeExchange($code, $redirectUri);
+        } catch (Exception\ForbiddenException $e) {
+            throw new AuthenticationException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        // TODO, remove this legacy code
         if (isset($tokenStruct['error'])) {
             switch ($tokenStruct['error']) {
                 case 'invalid_grant':
