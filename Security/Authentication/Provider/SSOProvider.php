@@ -66,8 +66,7 @@ class SSOProvider implements AuthenticationProviderInterface
 
         $authenticatedToken = new SSOToken($this->mergeRoles($userModel->getRoles(), $user->getRoles()));
         $authenticatedToken->setUser($user);
-        $authenticatedToken->setAccessToken($token->getAccessToken())
-            ->setExpiresAt($token->getExpiresAt())
+        $authenticatedToken->setAuth0Data($token->getAuth0Data())
             ->setUserModel($userModel)
             ->setAuthenticated(true);
 
