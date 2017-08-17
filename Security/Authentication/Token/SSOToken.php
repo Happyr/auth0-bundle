@@ -26,7 +26,6 @@ class SSOToken extends AbstractToken
      */
     private $userModel;
 
-
     /**
      * @param Token $data
      *
@@ -59,7 +58,6 @@ class SSOToken extends AbstractToken
         return $this->auth0Data->getAccessToken();
     }
 
-
     /**
      * @return mixed
      */
@@ -71,7 +69,6 @@ class SSOToken extends AbstractToken
 
         return $this->auth0Data->getExpiresAt();
     }
-
 
     /**
      * @return mixed

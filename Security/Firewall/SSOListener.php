@@ -72,7 +72,6 @@ class SSOListener extends AbstractAuthenticationListener
             throw new AuthenticationException('Invalid CSRF token');
         }
 
-
         try {
             $redirectUri = $this->httpUtils->generateUri($request, $this->callbackPath);
             $tokenStruct = $this->authenticationApi->codeExchange($code, $redirectUri);
