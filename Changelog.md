@@ -2,9 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release. 
 
-## 0.2.4
+## 0.3.0
 
 - Make sure we can access `Token` from Auth0.
+- Make sure `$auth0Data` is actually a `Token`.
 - Added options for `scope` and `audience`.
 
 ## 0.2.3
