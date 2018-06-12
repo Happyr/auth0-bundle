@@ -17,8 +17,15 @@ class SSOFactory extends AbstractFactory
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
         $providerId = 'happyr.auth0.security.authentication.provider.sso.'.$id;
+
+        if (class_exists(ChildDefinition::class)) {
+            $definition = new ChildDefinition('happyr.auth0.security.authentication.provider.sso');
+        } else {
+            $definition = new DefinitionDecorator('happyr.auth0.security.authentication.provider.sso');
+        }
+
         $container
-            ->setDefinition($providerId, new DefinitionDecorator('happyr.auth0.security.authentication.provider.sso'))
+            ->setDefinition($providerId, new DefinitionDecorator($definition))
             ->replaceArgument(0, new Reference($userProviderId))
         ;
 
