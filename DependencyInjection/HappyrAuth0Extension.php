@@ -37,7 +37,10 @@ class HappyrAuth0Extension extends Extension
 
         if (!empty($config['httplug_client_service'])) {
             $container->getDefinition('happyr.auth0.api.authentication')
+                ->replaceArgument(3, $config['audience'])
+                ->replaceArgument(4, $config['scope'])
                 ->replaceArgument(5, new Reference($config['httplug_client_service']));
+
             $container->getDefinition('happyr.auth0.api.management.factory')
                 ->replaceArgument(3, new Reference($config['httplug_client_service']));
         }

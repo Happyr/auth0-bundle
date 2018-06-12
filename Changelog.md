@@ -4,7 +4,8 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ## 0.2.4
 
-- Make sure we can access Token from Auth0
+- Make sure we can access `Token` from Auth0.
+- Added options for `scope` and `audience`.
 
 ## 0.2.3
 
