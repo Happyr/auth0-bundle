@@ -12,6 +12,18 @@ use Symfony\Bundle\SecurityBundle\SecurityBundle;
 
 class BundleInitializationTest extends BaseBundleTestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        // Make all services public
+        $this->addCompilerPass(new PublicServicePass());
+
+        // Make services public that have an idea that matches a regex
+        $this->addCompilerPass(new PublicServicePass('|happyr.auth0.*|'));
+    }
+
+
     protected function getBundleClass()
     {
         return HappyrAuth0Bundle::class;
