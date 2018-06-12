@@ -7,6 +7,7 @@ use Auth0\SDK\API\Management;
 use Happyr\Auth0Bundle\HappyrAuth0Bundle;
 use Happyr\Auth0Bundle\Security\EntryPoint\SSOEntryPoint;
 use Nyholm\BundleTest\BaseBundleTestCase;
+use Nyholm\BundleTest\CompilerPass\PublicServicePass;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 
