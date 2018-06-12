@@ -16,13 +16,8 @@ class BundleInitializationTest extends BaseBundleTestCase
     {
         parent::setUp();
 
-        // Make all services public
-        $this->addCompilerPass(new PublicServicePass());
-
-        // Make services public that have an idea that matches a regex
         $this->addCompilerPass(new PublicServicePass('|happyr.auth0.*|'));
     }
-
 
     protected function getBundleClass()
     {
