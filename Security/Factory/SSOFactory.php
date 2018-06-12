@@ -25,7 +25,7 @@ class SSOFactory extends AbstractFactory
         }
 
         $container
-            ->setDefinition($providerId, new DefinitionDecorator($definition))
+            ->setDefinition($providerId, $definition)
             ->replaceArgument(0, new Reference($userProviderId))
         ;
 
