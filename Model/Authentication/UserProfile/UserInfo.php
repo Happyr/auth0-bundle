@@ -164,9 +164,9 @@ final class UserInfo implements ApiResponse, \ArrayAccess
     /**
      * @return string
      */
-    public function getSub()
+    public function getUserId()
     {
-        return $this->data['sub'];
+        return $this->data['sub'] ?? $this->data['user_id'];
     }
 
     /**
