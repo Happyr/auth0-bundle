@@ -6,9 +6,9 @@ services:
             - "https://%auth0.domain%"
             - "%auth0.client_id%"
             - "%auth0.client_secret%"
-            - ~ #audience
-            - ~ #scope
-            - ~ #httpclient
+            - ~ # audience
+            - ~ # scopes
+            - ~ # http client
 
     happyr.auth0.api.management.factory:
         class: Happyr\Auth0Bundle\Factory\ManagementFactory
@@ -46,4 +46,6 @@ services:
             - "@security.http_utils"
             - "%auth0.client_id%"
             - "%auth0.domain%"
+            - "%auth0.scope%"
+            - ~ # check path
         abstract: true

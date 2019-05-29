@@ -44,7 +44,7 @@ class SSOFactory extends AbstractFactory
 
         $container
             ->setDefinition($entryPointId, $definition)
-            ->addArgument($config['check_path'])
+            ->replaceArgument(5, $config['check_path'])
         ;
 
         return $entryPointId;
