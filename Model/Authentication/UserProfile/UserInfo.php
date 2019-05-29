@@ -126,7 +126,7 @@ final class UserInfo implements ApiResponse, \ArrayAccess
      */
     public function getName()
     {
-        return $this->data['name'];
+        return $this->data['name'] ?? $this->data['nickname'];
     }
 
     /**
@@ -135,14 +135,6 @@ final class UserInfo implements ApiResponse, \ArrayAccess
     public function getPicture()
     {
         return $this->data['picture'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserId()
-    {
-        return $this->data['user_id'];
     }
 
     /**
