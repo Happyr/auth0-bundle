@@ -24,6 +24,7 @@ services:
     happyr.auth0.api.management:
         class: Auth0\SDK\API\Management
         factory: ["@happyr.auth0.api.management.factory", "create"]
+        lazy: true
 
     happyr.auth0.security.authentication.provider.sso:
         class: Happyr\Auth0Bundle\Security\Authentication\Provider\SSOProvider
