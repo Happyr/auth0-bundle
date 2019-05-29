@@ -15,7 +15,7 @@ use Happyr\Auth0Bundle\Model\ApiResponse;
 final class UserInfo implements ApiResponse, \ArrayAccess
 {
     /**
-     * @var array the raw data from the API.
+     * @var array the raw data from the API
      */
     private $data;
 
