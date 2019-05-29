@@ -2,8 +2,8 @@
 
 namespace Happyr\Auth0Bundle\Tests\Functional;
 
-use GuzzleHttp\Psr7\Response;
 use Http\Mock\Client;
+use Nyholm\Psr7\Response;
 
 class MockedClientFactory
 {
