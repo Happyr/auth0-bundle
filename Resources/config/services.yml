@@ -1,5 +1,8 @@
 
 services:
+    Auth0\SDK\API\Authentication: '@happyr.auth0.api.authentication'
+    Auth0\SDK\API\Management: '@happyr.auth0.api.management'
+
     happyr.auth0.api.authentication:
         class: Auth0\SDK\API\Authentication
         arguments:
