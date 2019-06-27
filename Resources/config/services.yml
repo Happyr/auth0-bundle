@@ -50,5 +50,5 @@ services:
             - "%auth0.client_id%"
             - "%auth0.domain%"
             - "%auth0.scope%"
-            - ~ # check path
+            - '' # check path
         abstract: true
