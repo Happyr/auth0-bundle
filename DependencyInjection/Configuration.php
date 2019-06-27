@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('client_secret')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('cache')->defaultNull()->end()
                 ->scalarNode('httplug_client_service')->defaultNull()->end()
-                ->scalarNode('scope')->defaultNull()->info('Seperated with space')->end()
+                ->scalarNode('scope')->defaultValue('')->info('Seperated with space')->end()
                 ->scalarNode('audience')->defaultNull()->end()
             ->end();
 
