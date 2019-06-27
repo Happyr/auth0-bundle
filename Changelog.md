@@ -2,6 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release. 
 
+## 0.5.1
+
+- Added extra checks so we dont access array keys that do not exist
+
 ## 0.5.0
 
 - Added correct language parameter to Universal SSO

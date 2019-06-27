@@ -51,7 +51,7 @@ final class UserInfo implements ApiResponse, \ArrayAccess
 
     public function offsetExists($offset): bool
     {
-        return isset($this->data[$offset]);
+        return array_key_exists($offset, $this->data);
     }
 
     public function offsetGet($offset)
@@ -71,7 +71,7 @@ final class UserInfo implements ApiResponse, \ArrayAccess
 
     public function isEmailVerified(): bool
     {
-        return $this->data['email_verified'];
+        return $this->data['email_verified'] ?? false;
     }
 
     public function getEmail(): ?string
@@ -91,7 +91,7 @@ final class UserInfo implements ApiResponse, \ArrayAccess
 
     public function getUpdatedAt(): \DateTimeImmutable
     {
-        return new \DateTimeImmutable($this->data['updated_at']);
+        return new \DateTimeImmutable($this->data['updated_at'] ?? 'now');
     }
 
     public function getName(): string
@@ -111,12 +111,12 @@ final class UserInfo implements ApiResponse, \ArrayAccess
 
     public function getIdentities(): array
     {
-        return $this->data['identities'];
+        return $this->data['identities'] ?? [];
     }
 
     public function getCreatedAt(): \DateTimeInterface
     {
-        return new \DateTimeImmutable($this->data['created_at']);
+        return new \DateTimeImmutable($this->data['created_at'] ?? 'now');
     }
 
     /**
