@@ -48,9 +48,10 @@ class SSOEntryPoint implements AuthenticationEntryPointInterface
             'response_type' => 'code',
             'client_id' => $this->auth0ClientId,
             'redirect_uri' => $this->httpUtils->generateUri($request, $this->callbackPath),
-            'language' => $request->getLocale(),
             'state' => $csrfToken->getValue(),
             'scope' => $this->scope,
+            // https://auth0.com/docs/universal-login/i18n
+            'ui_locales' => $request->getLocale(),
         ];
 
         return new RedirectResponse(sprintf('https://%s/authorize?%s', $this->auth0Domain, http_build_query($query)));
