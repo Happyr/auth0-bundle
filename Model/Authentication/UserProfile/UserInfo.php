@@ -19,20 +19,12 @@ final class UserInfo implements ApiResponse, \ArrayAccess
      */
     private $data;
 
-    /**
-     * @param array $data
-     */
     private function __construct(array $data)
     {
         $this->data = $data;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return self
-     */
-    public static function create($data)
+    public static function create(array $data): UserInfo
     {
         return new self($data);
     }
@@ -57,7 +49,7 @@ final class UserInfo implements ApiResponse, \ArrayAccess
         return '';
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->data[$offset]);
     }
@@ -67,96 +59,62 @@ final class UserInfo implements ApiResponse, \ArrayAccess
         return $this->data[$offset];
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \LogicException('The UserInfo object is read only');
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \LogicException('The UserInfo object is read only');
     }
 
-    /**
-     * @return bool
-     */
-    public function isEmailVerified()
+    public function isEmailVerified(): bool
     {
         return $this->data['email_verified'];
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
-        return $this->data['email'];
+        return $this->data['email'] ?? null;
     }
 
-    /**
-     * @return string
-     */
-    public function getUsername()
+    public function getUsername(): ?string
     {
-        if (!isset($this->data['username'])) {
-            return null;
-        }
-
-        return $this->data['username'];
+        return $this->data['username'] ?? null;
     }
 
-    /**
-     * @return string
-     */
-    public function getClientId()
+    public function getClientId(): ?string
     {
-        return $this->data['clientID'];
+        return $this->data['clientID'] ?? null;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
-    public function getUpdatedAt()
+    public function getUpdatedAt(): \DateTimeImmutable
     {
         return new \DateTimeImmutable($this->data['updated_at']);
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
-        return $this->data['name'] ?? $this->data['nickname'];
+        return $this->data['name'] ?? $this->data['nickname'] ?? '';
     }
 
-    /**
-     * @return string
-     */
-    public function getPicture()
+    public function getPicture(): ?string
     {
-        return $this->data['picture'];
+        return $this->data['picture'] ?? null;
     }
 
-    /**
-     * @return string
-     */
-    public function getNickname()
+    public function getNickname(): string
     {
-        return $this->data['nickname'];
+        return $this->data['nickname'] ?? '';
     }
 
-    /**
-     * @return array
-     */
-    public function getIdentities()
+    public function getIdentities(): array
     {
         return $this->data['identities'];
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
-    public function getCreatedAt()
+    public function getCreatedAt(): \DateTimeInterface
     {
         return new \DateTimeImmutable($this->data['created_at']);
     }
@@ -164,15 +122,12 @@ final class UserInfo implements ApiResponse, \ArrayAccess
     /**
      * @return string
      */
-    public function getUserId()
+    public function getUserId(): ?string
     {
-        return $this->data['sub'] ?? $this->data['user_id'];
+        return $this->data['sub'] ?? $this->data['user_id'] ?? null;
     }
 
-    /**
-     * @return array
-     */
-    public function getRoles()
+    public function getRoles(): array
     {
         if (!isset($this->data['roles'])) {
             return [];
@@ -181,13 +136,7 @@ final class UserInfo implements ApiResponse, \ArrayAccess
         return $this->data['roles'];
     }
 
-    /**
-     * @param string $name
-     * @param mixed  $default
-     *
-     * @return mixed
-     */
-    public function getAppMetadata($name, $default = null)
+    public function getAppMetadata(string $name, $default = null)
     {
         if (!isset($this->data['app_metadata'])) {
             return $default;
@@ -200,13 +149,7 @@ final class UserInfo implements ApiResponse, \ArrayAccess
         return $this->data['app_metadata'][$name];
     }
 
-    /**
-     * @param string $name
-     * @param mixed  $default
-     *
-     * @return mixed
-     */
-    public function getUserMetadata($name, $default = null)
+    public function getUserMetadata(string $name, $default = null)
     {
         if (!isset($this->data['user_metadata'])) {
             return $default;

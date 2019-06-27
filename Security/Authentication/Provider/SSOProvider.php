@@ -29,10 +29,6 @@ class SSOProvider implements AuthenticationProviderInterface
      */
     private $authenticationApi;
 
-    /**
-     * @param UserProviderInterface $userProvider
-     * @param Authentication        $authenticationApi
-     */
     public function __construct(UserProviderInterface $userProvider, Authentication $authenticationApi)
     {
         $this->userProvider = $userProvider;
@@ -66,9 +62,9 @@ class SSOProvider implements AuthenticationProviderInterface
 
         $authenticatedToken = new SSOToken($this->mergeRoles($userModel->getRoles(), $user->getRoles()));
         $authenticatedToken->setUser($user);
-        $authenticatedToken->setAuth0Data($token->getAuth0Data())
-            ->setUserModel($userModel)
-            ->setAuthenticated(true);
+        $authenticatedToken->setAuth0Data($token->getAuth0Data());
+        $authenticatedToken->setUserModel($userModel);
+        $authenticatedToken->setAuthenticated(true);
 
         return $authenticatedToken;
     }
@@ -79,9 +75,6 @@ class SSOProvider implements AuthenticationProviderInterface
     }
 
     /**
-     * @param $userModel
-     * @param $user
-     *
      * @return array
      */
     private function mergeRoles(array $a, array $b)

@@ -44,107 +44,56 @@ final class Token implements ApiResponse
      */
     private $expiresAt;
 
-    /**
-     * @param string $tokenType
-     * @param int    $expiresIn
-     */
-    public function __construct($tokenType, $expiresIn)
+    public function __construct(string $tokenType, int $expiresIn)
     {
         $this->tokenType = $tokenType;
         $this->expiresIn = $expiresIn;
         $this->expiresAt = (new \DateTimeImmutable())->modify('+'.$expiresIn.' seconds');
     }
 
-    /**
-     * @param array $data
-     *
-     * @return self
-     */
-    public static function create($data)
+    public static function create(array $data): Token
     {
-        $token = new self($data['token_type'], $data['expires_in']);
+        $token = new self($data['token_type'], (int) $data['expires_in']);
 
         if (isset($data['access_token'])) {
-            $token->setAccessToken($data['access_token']);
+            $token->accessToken = $data['access_token'];
         }
         if (isset($data['refresh_token'])) {
-            $token->setRefreshToken($data['refresh_token']);
+            $token->refreshToken = $data['refresh_token'];
         }
         if (isset($data['id_token'])) {
-            $token->setIdToken($data['id_token']);
+            $token->idToken = $data['id_token'];
         }
 
         return $token;
     }
 
-    /**
-     * @param string $accessToken
-     */
-    private function setAccessToken($accessToken)
-    {
-        $this->accessToken = $accessToken;
-    }
-
-    /**
-     * @param string $refreshToken
-     */
-    private function setRefreshToken($refreshToken)
-    {
-        $this->refreshToken = $refreshToken;
-    }
-
-    /**
-     * @param string $idToken
-     ´´     */
-    private function setIdToken($idToken)
-    {
-        $this->idToken = $idToken;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAccessToken()
+    public function getAccessToken(): ?string
     {
         return $this->accessToken;
     }
 
-    /**
-     * @return string
-     */
-    public function getRefreshToken()
+    public function getRefreshToken(): ?string
     {
         return $this->refreshToken;
     }
 
-    /**
-     * @return string
-     */
-    public function getIdToken()
+    public function getIdToken(): ?string
     {
         return $this->idToken;
     }
 
-    /**
-     * @return string
-     */
-    public function getTokenType()
+    public function getTokenType(): string
     {
         return $this->tokenType;
     }
 
-    /**
-     * @return int
-     */
-    public function getExpiresIn()
+    public function getExpiresIn(): int
     {
         return $this->expiresIn;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
-    public function getExpiresAt()
+    public function getExpiresAt(): \DateTimeInterface
     {
         return $this->expiresAt;
     }

@@ -46,16 +46,9 @@ class SSOListener extends AbstractAuthenticationListener
         $this->authenticationApi = $authenticationApi;
     }
 
-    /**
-     * @param string $callbackPath
-     *
-     * @return SSOListener
-     */
-    public function setCallbackPath($callbackPath)
+    public function setCallbackPath(string $callbackPath)
     {
         $this->callbackPath = $callbackPath;
-
-        return $this;
     }
 
     protected function attemptAuthentication(Request $request)
