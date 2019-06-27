@@ -15,9 +15,7 @@ interface ApiResponse
     /**
      * Create an API response object from the HTTP response from the API server.
      *
-     * @param array $data
-     *
      * @return self
      */
-    public static function create($data);
+    public static function create(array $data);
 }

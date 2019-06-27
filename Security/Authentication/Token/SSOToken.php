@@ -26,30 +26,17 @@ class SSOToken extends AbstractToken
      */
     private $userModel;
 
-    /**
-     * @param Token $data
-     *
-     * @return SSOToken
-     */
     public function setAuth0Data(Token $data)
     {
         $this->auth0Data = $data;
-
-        return $this;
     }
 
-    /**
-     * @return Token|null
-     */
-    public function getAuth0Data()
+    public function getAuth0Data(): ?Token
     {
         return $this->auth0Data;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAccessToken()
+    public function getAccessToken(): ?string
     {
         if (null === $this->auth0Data) {
             return null;
@@ -58,10 +45,7 @@ class SSOToken extends AbstractToken
         return $this->auth0Data->getAccessToken();
     }
 
-    /**
-     * @return mixed
-     */
-    public function getExpiresAt()
+    public function getExpiresAt(): ?\DateTimeInterface
     {
         if (null === $this->auth0Data) {
             return null;
@@ -70,24 +54,14 @@ class SSOToken extends AbstractToken
         return $this->auth0Data->getExpiresAt();
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUserModel()
+    public function getUserModel(): ?UserInfo
     {
         return $this->userModel;
     }
 
-    /**
-     * @param UserInfo $userModel
-     *
-     * @return SSOToken
-     */
     public function setUserModel(UserInfo $userModel)
     {
         $this->userModel = $userModel;
-
-        return $this;
     }
 
     public function getCredentials()
