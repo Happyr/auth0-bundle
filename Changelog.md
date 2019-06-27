@@ -2,6 +2,14 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release. 
 
+## 0.4.0
+
+- Set Management to a lazy service
+- Added support for Sf 4.3
+- Removed support for Sf 2.8
+- Removed `UserInfo::getSub()`
+- Added scope to `SSOProvicer`
+
 ## 0.3.0
 
 - Make sure we can access `Token` from Auth0.

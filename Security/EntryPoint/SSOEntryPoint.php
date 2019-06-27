@@ -21,8 +21,14 @@ class SSOEntryPoint implements AuthenticationEntryPointInterface
     private $scope;
     private $callbackPath;
 
-    public function __construct(CsrfTokenManager $csrfTokenManager, HttpUtils $httpUtils, string $auth0ClientId, string $auth0Domain, string $scope, string $callbackPath)
-    {
+    public function __construct(
+        CsrfTokenManager $csrfTokenManager,
+        HttpUtils $httpUtils,
+        string $auth0ClientId,
+        string $auth0Domain,
+        string $scope,
+        string $callbackPath
+    ) {
         $this->csrfTokenManager = $csrfTokenManager;
         $this->httpUtils = $httpUtils;
         $this->auth0ClientId = $auth0ClientId;

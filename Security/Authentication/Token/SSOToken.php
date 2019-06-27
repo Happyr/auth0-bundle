@@ -146,7 +146,6 @@ class SSOToken extends AbstractToken
         return array_keys($uniqueRoles);
     }
 
-
     /**
      * This function is deprecated by Symfony 4.3.
      */
