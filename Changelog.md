@@ -2,6 +2,13 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release. 
 
+## 0.5.0
+
+- Added correct language parameter to Universal SSO
+- Removed code not used
+- Added PHP7.1 type hints
+- Removed fluid functions
+
 ## 0.4.0
 
 - Set Management to a lazy service
