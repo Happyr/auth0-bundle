@@ -28,6 +28,7 @@ class HappyrAuth0Extension extends Extension
 
         // Add the secret key as parameter
         $container->setParameter('auth0.domain', $config['domain']);
+        $container->setParameter('auth0.login_domain', $config['login_domain'] ?? $config['domain']);
         $container->setParameter('auth0.client_id', $config['client_id']);
         $container->setParameter('auth0.client_secret', $config['client_secret']);
         $container->setParameter('auth0.scope', $config['scope']);

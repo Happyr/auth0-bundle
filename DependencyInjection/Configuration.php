@@ -21,6 +21,7 @@ class Configuration implements ConfigurationInterface
         $root
             ->children()
                 ->scalarNode('domain')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('login_domain')->defaultNull()->info('If you configured SSO with a custom domain.')->end()
                 ->scalarNode('client_id')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('client_secret')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('cache')->defaultNull()->end()
