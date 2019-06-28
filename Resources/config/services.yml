@@ -48,7 +48,7 @@ services:
             - "@security.csrf.token_manager"
             - "@security.http_utils"
             - "%auth0.client_id%"
-            - "%auth0.domain%"
+            - "%auth0.login_domain%"
             - "%auth0.scope%"
             - # check path
         abstract: true

@@ -2,6 +2,10 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release. 
 
+## 0.5.2
+
+- Added support for custom SSO domains
+
 ## 0.5.1
 
 - Added extra checks so we dont access array keys that do not exist
