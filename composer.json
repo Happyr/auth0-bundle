@@ -31,6 +31,9 @@
         "php-http/mock-client": "^1.0",
         "nyholm/psr7": "^1.0"
     },
+    "suggest": {
+        "symfony/proxy-manager-bridge": "To make sure services are lazy."
+    },
     "autoload": {
         "psr-4": { "Happyr\\Auth0Bundle\\": "" },
         "exclude-from-classmap": [
