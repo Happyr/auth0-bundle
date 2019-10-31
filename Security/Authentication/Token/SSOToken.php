@@ -133,7 +133,7 @@ class SSOToken extends AbstractToken
         } else {
             $parentRoles = parent::getRoles(func_get_arg(0));
         }
-        
+
         $allRoles = array_merge($parentRoles, $this->storedRoles);
         $uniqueRoles = [];
 
