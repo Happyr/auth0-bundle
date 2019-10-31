@@ -122,10 +122,19 @@ class SSOToken extends AbstractToken
 
     /**
      * This function is deprecated by Symfony 4.3.
+     *
+     * @deprecated
      */
     public function getRoles()
     {
-        $allRoles = array_merge(parent::getRoles(), $this->storedRoles);
+        // To avoid any Symfony deprecation notices created by Symfony
+        if (0 === \func_num_args()) {
+            $parentRoles = parent::getRoles();
+        } else {
+            $parentRoles = parent::getRoles(func_get_arg(0));
+        }
+        
+        $allRoles = array_merge($parentRoles, $this->storedRoles);
         $uniqueRoles = [];
 
         /** @var Role $role */
