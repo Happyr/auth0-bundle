@@ -9,14 +9,14 @@
 
 ### Warning
 
-This bundle is in very early development. However, it is being used in production for at least 3 applications. 
+This bundle is in very early development. However, it is being used in production for at least 3 applications.
 
 ### Installation
 
-Install with Composer: 
+Install with Composer:
 
 ```bash
-composer require happyr/auth0-bundle auth0/auth0-php:@alpha php-http/message php-http/guzzle6-adapter 
+composer require happyr/auth0-bundle auth0/auth0-php:@alpha php-http/message
 ```
 
 Enable the bundle in AppKernel.php
@@ -28,11 +28,11 @@ public function registerBundles()
         // ...
         new \Happyr\Auth0Bundle\HappyrAuth0Bundle(),
     ];
-    
+
     return $bundles;
-}       
+}
 ```
-Add your credentials: 
+Add your credentials:
 
 ```yaml
 // app/config/config.yml
@@ -44,7 +44,7 @@ happyr_auth0:
 ```
 
 
-Configure your application for Singe Sign On (SSO). 
+Configure your application for Singe Sign On (SSO).
 
 ```yaml
 // app/config/security.yml
