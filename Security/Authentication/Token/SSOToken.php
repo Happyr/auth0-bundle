@@ -70,6 +70,7 @@ class SSOToken extends AbstractToken
     }
 
     /**
+     * This is not compatible with Symfony5
      * {@inheritdoc}
      */
     public function serialize()
@@ -89,6 +90,7 @@ class SSOToken extends AbstractToken
     }
 
     /**
+     * This is not compatible with Symfony5
      * {@inheritdoc}
      */
     public function unserialize($serialized)
