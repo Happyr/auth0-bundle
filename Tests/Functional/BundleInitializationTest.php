@@ -13,7 +13,7 @@ use Symfony\Bundle\SecurityBundle\SecurityBundle;
 
 class BundleInitializationTest extends BaseBundleTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
