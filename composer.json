@@ -14,7 +14,7 @@
         "psr/log": "~1.0",
         "psr/cache": "~1.0",
         "symfony/framework-bundle": "^3.4 || ^4.3 || ^5.0",
-        "symfony/security-bundle": "^3.4 || ^4.3",
+        "symfony/security-bundle": "^3.4 || ^4.3 || ^5.0",
         "symfony/security-core": "^3.4 || ^4.3",
         "symfony/config": "^3.4 || ^4.4 || ^5.0",
         "php-http/httplug": "^1.0 || ^2.0",
