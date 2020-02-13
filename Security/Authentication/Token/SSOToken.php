@@ -84,7 +84,6 @@ class SSOToken extends AbstractToken
             $this->getAttributes(),
             $this->auth0Data,
         ];
-
     }
 
     /**
