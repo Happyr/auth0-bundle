@@ -70,32 +70,29 @@ class SSOToken extends AbstractToken
     }
 
     /**
-     * This is not compatible with Symfony5
      * {@inheritdoc}
      */
-    public function serialize()
+    public function __serialize(): array
     {
         $user = $this->getUser();
 
-        return serialize(
-            [
-                is_object($user) ? clone $user : $user,
-                is_object($this->userModel) ? clone $this->userModel : $this->userModel,
-                $this->isAuthenticated(),
-                $this->getRoles(),
-                $this->getAttributes(),
-                $this->auth0Data,
-            ]
-        );
+        return [
+            is_object($user) ? clone $user : $user,
+            is_object($this->userModel) ? clone $this->userModel : $this->userModel,
+            $this->isAuthenticated(),
+            $this->getRoles(),
+            $this->getAttributes(),
+            $this->auth0Data,
+        ];
+
     }
 
     /**
-     * This is not compatible with Symfony5
      * {@inheritdoc}
      */
-    public function unserialize($serialized)
+    public function __unserialize(array $data): void
     {
-        list($user, $this->userModel, $isAuthenticated, $this->storedRoles, $attributes, $auth0Data) = unserialize($serialized);
+        [$user, $this->userModel, $isAuthenticated, $this->storedRoles, $attributes, $auth0Data] = $data;
         if ($user) {
             $this->setUser($user);
         }
