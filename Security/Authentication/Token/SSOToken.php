@@ -80,7 +80,7 @@ class SSOToken extends AbstractToken
             is_object($user) ? clone $user : $user,
             is_object($this->userModel) ? clone $this->userModel : $this->userModel,
             $this->isAuthenticated(),
-            $this->getRoles(),
+            $this->getRoleNames(),
             $this->getAttributes(),
             $this->auth0Data,
         ];
