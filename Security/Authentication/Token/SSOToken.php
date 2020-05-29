@@ -135,9 +135,14 @@ class SSOToken extends AbstractToken
         $allRoles = array_merge($parentRoles, $this->storedRoles);
         $uniqueRoles = [];
 
-        /** @var Role $role */
+        /** @var Role|string $role */
         foreach ($allRoles as $role) {
-            $uniqueRoles[$role->getRole()] = $role;
+            $stringRole = $role;
+            if ($role instanceof Role) {
+                $stringRole = $role->getRole();
+            }
+            
+            $uniqueRoles[$stringRole] = $role;
         }
 
         return array_values($uniqueRoles);
