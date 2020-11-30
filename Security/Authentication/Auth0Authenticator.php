@@ -121,6 +121,6 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        return $this->get(AuthenticationFailureHandlerInterface::class)->onAuthenticationSuccess($request, $token);
+        return $this->get(AuthenticationFailureHandlerInterface::class)->onAuthenticationFailure($request, $token);
     }
 }

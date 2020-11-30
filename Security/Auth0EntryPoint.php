@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\HttpUtils;
 
@@ -22,7 +23,7 @@ class Auth0EntryPoint implements AuthenticationEntryPointInterface
     private $callbackRoute;
 
     public function __construct(
-        CsrfTokenManager $csrfTokenManager,
+        CsrfTokenManagerInterface $csrfTokenManager,
         HttpUtils $httpUtils,
         string $auth0ClientId,
         string $auth0Domain,

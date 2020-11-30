@@ -13,7 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
@@ -71,17 +70,16 @@ final class HappyrAuth0Extension extends Extension
             throw new \LogicException('You cannot configure both "happyr_auth0.firewall.default_target_path" and "happyr_auth0.firewall.success_handler"');
         }
 
-        $container->get(Auth0EntryPoint::class)->replaceArgument('$callbackRoute', $config['check_route']);
+        //$container->get(Auth0EntryPoint::class)->replaceArgument(6, $config['check_route']);
 
         $container->setAlias('auth0.authenticator', Auth0Authenticator::class);
         $def = $container->getDefinition(Auth0Authenticator::class);
         $def->setArgument('$checkRoute', $config['check_route']);
-        $def->addTag('container.service_subscriber', ['key'=>AuthenticationFailureHandlerInterface::class, 'id'=>'security.csrf.token_manager']);
-        $def->addTag('container.service_subscriber', ['key'=>AuthenticationSuccessHandlerInterface::class, 'id'=>'security.csrf.token_manager']);
+        $def->addTag('container.service_subscriber', ['key' => AuthenticationFailureHandlerInterface::class, 'id' => 'x']);
+        $def->addTag('container.service_subscriber', ['key' => AuthenticationSuccessHandlerInterface::class, 'id' => 'x']);
 
         if (!empty($config['user_provider'])) {
-            $def->addTag('container.service_subscriber', ['key'=>Auth0UserProviderInterface::class, 'id'=>$config['user_provider']]);
+            $def->addTag('container.service_subscriber', ['key' => Auth0UserProviderInterface::class, 'id' => $config['user_provider']]);
         }
     }
-
 }

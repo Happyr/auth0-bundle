@@ -27,12 +27,11 @@ services:
         autowire: true
         autoconfigure: true
 
-    auth0.entry_point: '@Happyr\Auth0Bundle\Security\Auth0EntryPoint'
     Happyr\Auth0Bundle\Security\Auth0EntryPoint:
         arguments:
-            - '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
-            - '@Symfony\Component\Security\Http\HttpUtils'
-            - '%auth0.client_id%'
-            - '%auth0.login_domain%'
-            - '%auth0.scope%'
-            - # check path
+        - '@security.csrf.token_manager'
+        - '@Symfony\Component\Security\Http\HttpUtils'
+        - '%auth0.client_id%'
+        - '%auth0.login_domain%'
+        - '%auth0.scope%'
+        - ~ # check path
