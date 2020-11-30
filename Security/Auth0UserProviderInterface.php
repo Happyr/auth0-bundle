@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Happyr\Auth0Bundle\Security;
 
-use Happyr\Auth0Bundle\Model\Authentication\UserProfile\UserInfo;
+use Happyr\Auth0Bundle\Model\UserInfo;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 

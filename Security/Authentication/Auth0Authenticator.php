@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Happyr\Auth0Bundle\Security\Authentication;
 
-use App\Repository\UserRepository;
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Exception\ForbiddenException;
-use Happyr\Auth0Bundle\Model\Authentication\UserProfile\UserInfo;
+use Happyr\Auth0Bundle\Model\UserInfo;
 use Happyr\Auth0Bundle\Security\Passport\Auth0Badge;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -16,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -55,15 +53,6 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
             AuthenticationFailureHandlerInterface::class,
             '?'.Auth0UserProviderInterface::class,
         ];
-    }
-
-    /**
-     * @template T of object
-     * @psalm-param class-string<T> $class
-     * @return T
-     */
-    private function get(string $service) {
-         return $this->locator->get($service);
     }
 
     public function supports(Request $request): ?bool
@@ -105,7 +94,7 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
         }
 
         $userProviderCallback = null;
-        if (null !== $up = get(Auth0UserProviderInterface::class)) {
+        if (null !== $up = $this->get(Auth0UserProviderInterface::class)) {
             $userProviderCallback = static function () use ($up, $userModel) {
                 return $up->loadByUserModel($userModel);
             };
@@ -121,6 +110,23 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        return $this->get(AuthenticationFailureHandlerInterface::class)->onAuthenticationFailure($request, $token);
+        return new RedirectResponse('/');
+
+        return $this->get(AuthenticationFailureHandlerInterface::class)->onAuthenticationFailure($request, $exception);
+    }
+
+    /**
+     * @template T of object
+     * @psalm-param class-string<T> $class
+     *
+     * @return T
+     */
+    private function get(string $service)
+    {
+        if ($this->locator->has($service)) {
+            return $this->locator->get($service);
+        }
+
+        return null;
     }
 }

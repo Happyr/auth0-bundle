@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Happyr\Auth0Bundle\Security\Passport;
 
-use Happyr\Auth0Bundle\Model\Authentication\UserProfile\UserInfo;
+use Happyr\Auth0Bundle\Model\UserInfo;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\BadgeInterface;
 
 final class Auth0Badge implements BadgeInterface

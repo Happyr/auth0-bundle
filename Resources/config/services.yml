@@ -29,7 +29,7 @@ services:
 
     Happyr\Auth0Bundle\Security\Auth0EntryPoint:
         arguments:
-        - '@security.csrf.token_manager'
+        - '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
         - '@Symfony\Component\Security\Http\HttpUtils'
         - '%auth0.client_id%'
         - '%auth0.login_domain%'
