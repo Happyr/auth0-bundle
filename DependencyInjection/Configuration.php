@@ -33,6 +33,16 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('httplug_client_service')->defaultNull()->end()
                 ->scalarNode('scope')->defaultValue('')->info('Seperated with space')->end()
                 ->scalarNode('audience')->defaultNull()->end()
+                ->arrayNode('firewall')->canBeEnabled()
+                    ->children()
+                        ->scalarNode('check_route')->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode('failure_path')->defaultNull()->end()
+                        ->scalarNode('default_target_path')->defaultNull()->end()
+                        ->scalarNode('success_handler')->defaultNull()->end()
+                        ->scalarNode('user_provider')->defaultNull()->end()
+                    ->end()
+                ->end()
+
             ->end();
 
         return $treeBuilder;

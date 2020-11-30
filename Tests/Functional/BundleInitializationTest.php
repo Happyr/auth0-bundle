@@ -36,8 +36,8 @@ class BundleInitializationTest extends BaseBundleTestCase
 
         // Test if you services exists
         $map = [
-            'happyr.auth0.api.authentication' => Authentication::class,
-            'happyr.auth0.api.management' => Management::class,
+            Authentication::class => Authentication::class,
+            Management::class => Management::class,
             'happyr.auth0.security.authentication.entry_point.sso.default' => SSOEntryPoint::class,
         ];
 

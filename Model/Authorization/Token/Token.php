@@ -11,8 +11,9 @@ use Happyr\Auth0Bundle\Model\ApiResponse;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
+ * @deprecated This is not needed
  */
-final class Token implements ApiResponse
+final class Token
 {
     /**
      * @var string

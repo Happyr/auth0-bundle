@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
+ * @deprecated Use the new Symfony 5.2 authentication system instead. 
  */
 class SSOFactory extends AbstractFactory
 {
