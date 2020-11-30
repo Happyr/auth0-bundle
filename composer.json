@@ -10,13 +10,13 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": ">=7.2.5",
         "psr/log": "~1.0",
         "psr/cache": "~1.0",
-        "symfony/framework-bundle": "^4.4 || ^5.0",
-        "symfony/security-bundle": "^4.4 || ^5.0",
-        "symfony/security-core": "^4.4 || ^5.0",
-        "symfony/config": "^4.4 || ^5.0",
+        "symfony/framework-bundle": "^5.2",
+        "symfony/security-bundle": "^5.2",
+        "symfony/security-core": "^5.2",
+        "symfony/config": "^5.2",
         "php-http/httplug": "^1.0 || ^2.0",
         "php-http/client-common": "^1.9 || ^2.0",
         "php-http/discovery": "^1.6.1",
