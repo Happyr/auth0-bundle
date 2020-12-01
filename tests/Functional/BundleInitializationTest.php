@@ -5,7 +5,8 @@ namespace Happyr\Auth0Bundle\Tests\Functional;
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
 use Happyr\Auth0Bundle\HappyrAuth0Bundle;
-use Happyr\Auth0Bundle\Security\EntryPoint\SSOEntryPoint;
+use Happyr\Auth0Bundle\Security\Auth0EntryPoint;
+use Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator;
 use Nyholm\BundleTest\BaseBundleTestCase;
 use Nyholm\BundleTest\CompilerPass\PublicServicePass;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -17,7 +18,9 @@ class BundleInitializationTest extends BaseBundleTestCase
     {
         parent::setUp();
 
-        $this->addCompilerPass(new PublicServicePass('|happyr.auth0.*|'));
+        $this->addCompilerPass(new PublicServicePass('|Auth0\.*|'));
+        $this->addCompilerPass(new PublicServicePass('|auth0.*|'));
+        $this->addCompilerPass(new PublicServicePass('|Happyr\.*|'));
     }
 
     protected function getBundleClass()
@@ -38,7 +41,8 @@ class BundleInitializationTest extends BaseBundleTestCase
         $map = [
             Authentication::class => Authentication::class,
             Management::class => Management::class,
-            'happyr.auth0.security.authentication.entry_point.sso.default' => SSOEntryPoint::class,
+            'auth0.entry_point' => Auth0EntryPoint::class,
+            'auth0.authenticator' => Auth0Authenticator::class,
         ];
 
         foreach ($map as $serviceId => $class) {

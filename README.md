@@ -20,6 +20,7 @@ return [
     Happyr\Auth0Bundle\HappyrAuth0Bundle::class => ['all' => true],
 ];
 ```
+
 Add your credentials:
 
 ```yaml
@@ -43,6 +44,7 @@ Configure your application's security:
 ```yaml
 // config/packages/security.yml
 security:
+    enable_authenticator_manager: true # Use the new authentication system
     providers:
         users:
             entity:
@@ -78,4 +80,14 @@ happyr_auth0:
     firewall:
         # ..
         user_provider: App\UserProvider\Auth0UserProvider
+```
+
+## Troubleshooting
+
+Make sure you have csrf_protection enabled.
+
+```yaml
+framework:
+    csrf_protection:
+        enabled: true
 ```
