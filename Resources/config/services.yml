@@ -1,54 +1,37 @@
 
 services:
-    Auth0\SDK\API\Authentication: '@happyr.auth0.api.authentication'
-    Auth0\SDK\API\Management: '@happyr.auth0.api.management'
-
-    happyr.auth0.api.authentication:
-        class: Auth0\SDK\API\Authentication
+    Happyr\Auth0Bundle\Factory\ManagementFactory:
         arguments:
-            - "https://%auth0.domain%"
-            - "%auth0.client_id%"
-            - "%auth0.client_secret%"
-            - ~ # audience
-            - ~ # scopes
-            - ~ # http client
-
-    happyr.auth0.api.management.factory:
-        class: Happyr\Auth0Bundle\Factory\ManagementFactory
-        arguments:
-            - "@happyr.auth0.api.authentication"
-            - "%auth0.domain%"
-            - "@?auth0.cache"
-            - ~ #httpclient
-            - "@?logger"
+            - '@Auth0\SDK\API\Authentication'
+            - '%auth0.domain%' #domain
+            - '@?auth0.cache'
+            - ~ #http client
+            - '@?logger'
         tags:
             - { name: monolog.logger, channel: happyr_auth0 }
 
-    happyr.auth0.api.management:
-        class: Auth0\SDK\API\Management
-        factory: ["@happyr.auth0.api.management.factory", "create"]
+    Auth0\SDK\API\Management:
+        factory: ['@Happyr\Auth0Bundle\Factory\ManagementFactory', 'create']
         lazy: true
 
-    happyr.auth0.security.authentication.provider.sso:
-        class: Happyr\Auth0Bundle\Security\Authentication\Provider\SSOProvider
-        arguments: [~, '@happyr.auth0.api.authentication']
-        public: false
-
-    happyr.auth0.security.authentication.listener.sso:
-        class: Happyr\Auth0Bundle\Security\Firewall\SSOListener
-        parent: security.authentication.listener.abstract
-        abstract: true
-        calls:
-          - [ 'setAuthenticationApi', ["@happyr.auth0.api.authentication"]]
-          - [ 'setCsrfTokenManager', ["@security.csrf.token_manager"]]
-
-    happyr.auth0.security.authentication.entry_point.oauth:
-        class: Happyr\Auth0Bundle\Security\EntryPoint\SSOEntryPoint
+    Auth0\SDK\API\Authentication:
         arguments:
-            - "@security.csrf.token_manager"
-            - "@security.http_utils"
-            - "%auth0.client_id%"
-            - "%auth0.login_domain%"
-            - "%auth0.scope%"
-            - # check path
-        abstract: true
+            - 'https://%auth0.domain%'
+            - '%auth0.client_id%'
+            - '%auth0.client_secret%'
+            - '%auth0.audience%'
+            - '%auth0.scope%'
+            - ~ # http client
+
+    Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator:
+        autowire: true
+        autoconfigure: true
+
+    Happyr\Auth0Bundle\Security\Auth0EntryPoint:
+        arguments:
+        - '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
+        - '@Symfony\Component\Security\Http\HttpUtils'
+        - '%auth0.client_id%'
+        - '%auth0.login_domain%'
+        - '%auth0.scope%'
+        - ~ # check path

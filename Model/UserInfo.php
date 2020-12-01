@@ -5,14 +5,12 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Happyr\Auth0Bundle\Model\Authentication\UserProfile;
-
-use Happyr\Auth0Bundle\Model\ApiResponse;
+namespace Happyr\Auth0Bundle\Model;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-final class UserInfo implements ApiResponse, \ArrayAccess
+final class UserInfo implements \ArrayAccess
 {
     /**
      * @var array the raw data from the API
