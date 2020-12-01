@@ -16,12 +16,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('happyr_auth0');
-        // Keep compatibility with symfony/config < 4.2
-        if (!method_exists($treeBuilder, 'getRootNode')) {
-            $root = $treeBuilder->root('happyr_auth0');
-        } else {
-            $root = $treeBuilder->getRootNode();
-        }
+        $root = $treeBuilder->getRootNode();
 
         $root
             ->children()
