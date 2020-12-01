@@ -1,6 +1,26 @@
 # Change Log
 
-The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release. 
+The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
+
+## 0.7.0
+
+- Removed most things and added support for Symfony 5.2
+
+## 0.6.2
+
+- Better check type in SSOToken::getRoles()
+
+## 0.6.1
+
+- Removed use of deprecated code
+
+## 0.6.0
+
+- Adding Symfony 5 support
+
+## 0.5.3
+
+- Dont warn about deprecation notices when Symfony is calling the getRoles()
 
 ## 0.5.2
 
@@ -49,7 +69,7 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ### Changed
 
-We removed our custom API implementation and started to use the official Auth0 API client. 
+We removed our custom API implementation and started to use the official Auth0 API client.
 
 ### Added
 
