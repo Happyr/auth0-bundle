@@ -65,19 +65,19 @@ final class HappyrAuth0Extension extends Extension
 
     private function configureFirewall(ContainerBuilder $container, array $config)
     {
-        if (null === $config['success_handler'] xor null === $config['default_target_path']) {
+        if (!(null === $config['success_handler'] xor null === $config['default_target_path'])) {
             throw new \LogicException('You must define either "happyr_auth0.firewall.default_target_path" or "happyr_auth0.firewall.success_handler". Exactly one of them, not both.');
         }
 
-        if (null === $config['failure_handler'] xor null === $config['failure_path']) {
+        if (!(null === $config['failure_handler'] xor null === $config['failure_path'])) {
             throw new \LogicException('You must define either "happyr_auth0.firewall.failure_path" or "happyr_auth0.firewall.failure_handler". Exactly one of them, not both.');
         }
-        
+
         if (null === $successHandler = $config['success_handler']) {
             $def = $container->setDefinition($successHandler = 'happyr_auth0.success_handler', new ChildDefinition('security.authentication.success_handler'));
             $def->replaceArgument(1, ['default_target_path' => $config['default_target_path']]);
         }
-        
+
         if (null === $failureHandler = $config['failure_handler']) {
             $def = $container->setDefinition($failureHandler = 'happyr_auth0.failure_handler', new ChildDefinition('security.authentication.failure_handler'));
             $def->replaceArgument(2, ['failure_path' => $config['failure_path']]);
