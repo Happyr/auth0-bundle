@@ -9,7 +9,7 @@ class UserInfoTest extends TestCase
 {
     public function testGetUserId()
     {
-        $user = UserInfo::create(['user_id'=>'auth0|abc']);
+        $user = UserInfo::create(['user_id' => 'auth0|abc']);
         $this->assertEquals('auth0|abc', $user->getUserId());
     }
 }
