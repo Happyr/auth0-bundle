@@ -7,8 +7,6 @@
 
 namespace Happyr\Auth0Bundle\Model;
 
-use Happyr\Auth0Bundle\Model\ApiResponse;
-
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
