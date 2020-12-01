@@ -37,13 +37,9 @@
         "symfony/proxy-manager-bridge": "To make sure services are lazy."
     },
     "autoload": {
-        "psr-4": { "Happyr\\Auth0Bundle\\": "" },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+        "psr-4": { "Happyr\\Auth0Bundle\\": "src" }
     },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml"
+    "autoload-dev": {
+        "psr-4": { "Happyr\\Auth0Bundle\\Tests\\": "tests" }
     }
 }

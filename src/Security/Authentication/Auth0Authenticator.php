@@ -7,6 +7,7 @@ namespace Happyr\Auth0Bundle\Security\Authentication;
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Exception\ForbiddenException;
 use Happyr\Auth0Bundle\Model\UserInfo;
+use Happyr\Auth0Bundle\Security\Auth0UserProviderInterface;
 use Happyr\Auth0Bundle\Security\Passport\Auth0Badge;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -82,7 +83,7 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
             $redirectUri = $this->get(HttpUtils::class)->generateUri($request, $this->checkRoute);
             $tokenStruct = $this->get(Authentication::class)->codeExchange($code, $redirectUri);
         } catch (ForbiddenException $e) {
-            throw new AuthenticationException($e->getMessage(), $e->getCode(), $e);
+            throw new AuthenticationException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         try {
@@ -110,16 +111,14 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        return new RedirectResponse('/');
-
         return $this->get(AuthenticationFailureHandlerInterface::class)->onAuthenticationFailure($request, $exception);
     }
 
     /**
      * @template T of object
-     * @psalm-param class-string<T> $class
+     * @psalm-param class-string<T> $service
      *
-     * @return T
+     * @return T|null
      */
     private function get(string $service)
     {

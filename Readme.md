@@ -3,8 +3,6 @@
 [![Latest Version](https://img.shields.io/github/release/Happyr/auth0-bundle.svg?style=flat-square)](https://github.com/Happyr/auth0-bundle/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Build Status](https://img.shields.io/travis/Happyr/auth0-bundle.svg?style=flat-square)](https://travis-ci.org/Happyr/auth0-bundle)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/Happyr/auth0-bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/Happyr/auth0-bundle)
-[![Quality Score](https://img.shields.io/scrutinizer/g/Happyr/auth0-bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/Happyr/auth0-bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/happyr/auth0-bundle.svg?style=flat-square)](https://packagist.org/packages/happyr/auth0-bundle)
 
 ### Warning
