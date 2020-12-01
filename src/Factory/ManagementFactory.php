@@ -94,12 +94,10 @@ class ManagementFactory
     protected function getTokenStruct(): array
     {
         try {
-            $token = $this->authentication->clientCredentials(
-                [
-                    'audience' => sprintf('https://%s/api/v2/', $this->domain),
-                ]
-            );
-        } catch (\Auth0\SDK\Exception $e) {
+            $token = $this->authentication->clientCredentials([
+                'audience' => sprintf('https://%s/api/v2/', $this->domain),
+            ]);
+        } catch (\Auth0\SDK\Exception\ApiException $e) {
             throw $e;
         } catch (\Exception $e) {
             throw new CoreException('Could not get access token', 0, $e);

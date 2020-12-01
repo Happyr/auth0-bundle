@@ -1,0 +1,63 @@
+name: Tests
+on: [push, pull_request]
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ['7.2', '7.3', '7.4', '8.0']
+
+    steps:
+      - name: Set up PHP
+        uses: shivammathur/setup-php@2.1.0
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: flex
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download dependencies
+        env:
+          PHP_VERSION: ${{ matrix.php }}
+        run: |
+          if [ $PHP_VERSION = '8.0' ]; then
+            COMPOSER_OPTIONS='--ignore-platform-req=php'
+          fi
+          composer update --no-interaction --prefer-dist --optimize-autoloader --prefer-stable $COMPOSER_OPTIONS
+          echo ::group::Install phpunit
+          ./vendor/bin/simple-phpunit install
+          echo ::endgroup::
+
+      - name: Run tests
+        run: ./vendor/bin/simple-phpunit
+
+  lowest:
+    name: Lowest deps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up PHP
+        uses: shivammathur/setup-php@2.1.0
+        with:
+          php-version: 7.3
+          coverage: none
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download dependencies
+        run: |
+          composer update --no-interaction --prefer-dist --optimize-autoloader --prefer-stable --prefer-lowest
+          echo ::group::Install phpunit
+          ./vendor/bin/simple-phpunit install
+          echo ::endgroup::
+
+      - name: Run tests
+        env:
+          SYMFONY_DEPRECATIONS_HELPER: "max[self]=0"
+        run: ./vendor/bin/simple-phpunit
