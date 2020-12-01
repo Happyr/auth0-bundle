@@ -31,7 +31,7 @@ happyr_auth0:
     client_id: '%env(AUTH0_CLIENT_ID)%'
     client_secret: '%env(AUTH0_SECRET)%'
     cache: 'cache.redis'
-    scope: openid profile email
+    scope: openid profile email # "openid" is required.
     # If you want to configure firewall, then this section is required
     firewall:
         check_route: default_login_check
