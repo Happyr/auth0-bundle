@@ -23,7 +23,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Download dependencies
-        run: composer update --no-interaction --prefer-dist --optimize-autoloader --prefer-stable
+        run: |
+          composer update --no-interaction --prefer-dist --optimize-autoloader --prefer-stable
+          echo ::group::Install phpunit
+          ./vendor/bin/simple-phpunit install
+          echo ::endgroup::
 
       - name: Run tests
         run: ./vendor/bin/simple-phpunit
@@ -42,7 +46,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Download dependencies
-        run: composer update --no-interaction --prefer-dist --optimize-autoloader --prefer-stable --prefer-lowest
+        run: |
+          composer update --no-interaction --prefer-dist --optimize-autoloader --prefer-stable --prefer-lowest
+          echo ::group::Install phpunit
+          ./vendor/bin/simple-phpunit install
+          echo ::endgroup::
 
       - name: Run tests
         env:
