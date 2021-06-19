@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Happyr\Auth0Bundle\DependencyInjection;
 
-use Auth0\SDK\API\Authentication;
 use Happyr\Auth0Bundle\Factory\ConfigurationProvider;
-use Happyr\Auth0Bundle\Factory\ManagementFactory;
 use Happyr\Auth0Bundle\Security\Auth0EntryPoint;
 use Happyr\Auth0Bundle\Security\Auth0UserProviderInterface;
 use Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator;

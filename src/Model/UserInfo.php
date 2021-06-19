@@ -8,7 +8,8 @@
 namespace Happyr\Auth0Bundle\Model;
 
 /**
- * @link https://auth0.com/docs/users/user-profile-structure
+ * @see https://auth0.com/docs/users/user-profile-structure
+ *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 final class UserInfo implements \ArrayAccess
