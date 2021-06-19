@@ -14,7 +14,7 @@ services:
             - ~ # http client
 
     Happyr\Auth0Bundle\Factory\Auth0Factory:
-        arugments: ['@Happyr\Auth0Bundle\Factory\ConfigurationProvider']
+        arguments: ['@Happyr\Auth0Bundle\Factory\ConfigurationProvider']
 
     Auth0\SDK\Auth0:
         factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'auth0']
