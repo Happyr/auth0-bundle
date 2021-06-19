@@ -6,6 +6,7 @@ namespace Happyr\Auth0Bundle\Security\Authentication;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Exception\ForbiddenException;
+use Auth0\SDK\Exception\SdkException;
 use Happyr\Auth0Bundle\Model\UserInfo;
 use Happyr\Auth0Bundle\Security\Auth0UserProviderInterface;
 use Happyr\Auth0Bundle\Security\Passport\Auth0Badge;
@@ -81,7 +82,8 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
         try {
             $redirectUri = $this->get(HttpUtils::class)->generateUri($request, $this->checkRoute);
             $tokenStruct = $this->get(Authentication::class)->codeExchange($code, $redirectUri);
-        } catch (ForbiddenException $e) {
+        } catch (SdkException $e) {
+            // TODO use better exception
             throw new AuthenticationException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
