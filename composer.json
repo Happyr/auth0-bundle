@@ -34,11 +34,6 @@
     "suggest": {
         "symfony/proxy-manager-bridge": "To make sure services are lazy."
     },
-    "config": {
-        "platform": {
-            "php": "7.4.8"
-        }
-    },
     "autoload": {
         "psr-4": {
             "Happyr\\Auth0Bundle\\": "src"
