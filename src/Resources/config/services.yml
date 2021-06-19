@@ -2,14 +2,14 @@ services:
     Happyr\Auth0Bundle\Factory\ConfigurationProvider:
         arguments:
             -
-                client_id: '%auth0.client_id%'
-                client_secret: '%auth0.client_secret%'
+                clientId: '%auth0.client_id%'
+                clientSecret: '%auth0.client_secret%'
                 domain: '%auth0.domain%'
                 scope: '%auth0.scope%'
                 audience: '%auth0.audience%'
-                http_request_factory: '@?Psr\Http\Message\RequestFactoryInterface'
-                http_response_factory: '@?Psr\Http\Message\ResponseFactoryInterface'
-                http_stream_factory: '@?Psr\Http\Message\StreamFactoryInterface'
+                httpRequestFactory: '@?Psr\Http\Message\RequestFactoryInterface'
+                httpResponseFactory: '@?Psr\Http\Message\ResponseFactoryInterface'
+                httpStreamFactory: '@?Psr\Http\Message\StreamFactoryInterface'
             - ~ # cache
             - ~ # http client
 
