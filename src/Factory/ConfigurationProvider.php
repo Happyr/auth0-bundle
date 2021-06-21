@@ -39,6 +39,7 @@ class ConfigurationProvider
 
         if (null !== $this->cache) {
             $config->setTokenCache($this->cache);
+            $config->setManagementTokenCache($this->cache);
         }
 
         return $config;

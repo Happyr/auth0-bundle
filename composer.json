@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=7.2.5",
-        "auth0/auth0-php": "^8.0@dev",
+        "auth0/auth0-php": "8.x-dev#91290acccd81d39818ddba8c1e122593302e4364",
         "psr/cache": "^1.0 || ^2.0 || ^3.0",
         "psr/log": "^1.0",
         "symfony/config": "^5.2",
