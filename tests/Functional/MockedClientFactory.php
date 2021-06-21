@@ -2,15 +2,15 @@
 
 namespace Happyr\Auth0Bundle\Tests\Functional;
 
-use Nyholm\Psr7\Response;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Psr18Client;
+use Symfony\Component\HttpClient\Response\MockResponse;
 
 class MockedClientFactory
 {
     public static function create()
     {
-        $response = new Response(200, ['Content-Type' => 'application/json'], '{
+        $response = new MockResponse('{
   "access_token":"eyJz93a...k4laUWw",
   "refresh_token":"GEbRxBN...edjnXbL",
   "id_token":"eyJ0XAi...4faeEoQ",
