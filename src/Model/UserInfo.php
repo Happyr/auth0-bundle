@@ -29,9 +29,6 @@ final class UserInfo implements \ArrayAccess
         return new self($data);
     }
 
-    /**
-     * @return string
-     */
     public function __toString()
     {
         if (!empty($this->data['email'])) {
@@ -79,6 +76,16 @@ final class UserInfo implements \ArrayAccess
         return $this->data['email'] ?? null;
     }
 
+    public function gePhoneNumber(): ?string
+    {
+        return $this->data['phone_number'] ?? null;
+    }
+
+    public function isBlocked(): ?bool
+    {
+        return $this->data['blocked'] ?? null;
+    }
+
     public function getUsername(): ?string
     {
         return $this->data['username'] ?? null;
@@ -89,14 +96,24 @@ final class UserInfo implements \ArrayAccess
         return $this->data['clientID'] ?? null;
     }
 
-    public function getUpdatedAt(): \DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return new \DateTimeImmutable($this->data['updated_at'] ?? 'now');
+        return isset($this->data['updated_at']) ? new \DateTimeImmutable($this->data['updated_at']) : null;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
-        return $this->data['name'] ?? $this->data['nickname'] ?? '';
+        return $this->data['name'] ?? $this->data['nickname'] ?? null;
+    }
+
+    public function getGivenName(): ?string
+    {
+        return $this->data['given_name'] ?? null;
+    }
+
+    public function getFamilyName(): ?string
+    {
+        return $this->data['family_name'] ?? null;
     }
 
     public function getPicture(): ?string
@@ -104,9 +121,24 @@ final class UserInfo implements \ArrayAccess
         return $this->data['picture'] ?? null;
     }
 
-    public function getNickname(): string
+    public function getNickname(): ?string
     {
-        return $this->data['nickname'] ?? '';
+        return $this->data['nickname'] ?? null;
+    }
+
+    public function getLastIp(): ?string
+    {
+        return $this->data['last_ip'] ?? null;
+    }
+
+    public function getMultifactor(): ?string
+    {
+        return $this->data['multifactor'] ?? null;
+    }
+
+    public function getLoginsCount(): int
+    {
+        return $this->data['logins_count'] ?? 0;
     }
 
     public function getIdentities(): array
@@ -114,26 +146,29 @@ final class UserInfo implements \ArrayAccess
         return $this->data['identities'] ?? [];
     }
 
-    public function getCreatedAt(): \DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return new \DateTimeImmutable($this->data['created_at'] ?? 'now');
+        return isset($this->data['created_at']) ? new \DateTimeImmutable($this->data['created_at']) : null;
     }
 
-    /**
-     * @return string
-     */
+    public function getLastLoginAt(): ?\DateTimeInterface
+    {
+        return isset($this->data['last_login']) ? new \DateTimeImmutable($this->data['last_login']) : null;
+    }
+
+    public function getLastPasswordResetAt(): ?\DateTimeInterface
+    {
+        return isset($this->data['last_password_reset']) ? new \DateTimeImmutable($this->data['last_password_reset']) : null;
+    }
+
     public function getUserId(): ?string
     {
-        return $this->data['sub'] ?? $this->data['user_id'] ?? null;
+        return $this->data['user_id'] ?? null;
     }
 
     public function getRoles(): array
     {
-        if (!isset($this->data['roles'])) {
-            return [];
-        }
-
-        return $this->data['roles'];
+        return $this->data['roles'] ?? [];
     }
 
     public function getAppMetadata(string $name, $default = null)

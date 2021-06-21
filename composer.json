@@ -16,7 +16,7 @@
         "psr/log": "^1.0",
         "symfony/config": "^5.2",
         "symfony/framework-bundle": "^5.2",
-        "symfony/security-bundle": "^5.3",
+        "symfony/security-bundle": "^5.3.3",
         "symfony/security-core": "^5.3"
     },
     "require-dev": {

@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 0.8.0
+
+### Changed
+
+- [BC break] The `UserInfo::getUserId()` does not verify `"sub"` anymore. It goes directly to `"user_id"`.
+
 ## 0.7.0
 
 - Removed most things and added support for Symfony 5.2
