@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Happyr\Auth0Bundle\Security\Authentication;
 
 use Auth0\SDK\API\Authentication;
-use Auth0\SDK\Exception\ForbiddenException;
+use Auth0\SDK\Exception\Auth0Exception;
 use Happyr\Auth0Bundle\Model\UserInfo;
 use Happyr\Auth0Bundle\Security\Auth0UserProviderInterface;
 use Happyr\Auth0Bundle\Security\Passport\Auth0Badge;
@@ -74,20 +74,23 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
             throw new AuthenticationException('No state in the request.');
         }
 
-        if (!$this->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken('auth0-sso', $state))) {
+        if (!$this->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken('auth0-sso', (string) $state))) {
             throw new AuthenticationException('Invalid CSRF token');
         }
 
         try {
             $redirectUri = $this->get(HttpUtils::class)->generateUri($request, $this->checkRoute);
-            $tokenStruct = $this->get(Authentication::class)->codeExchange($code, $redirectUri);
-        } catch (ForbiddenException $e) {
+            $response = $this->get(Authentication::class)->codeExchange((string) $code, $redirectUri);
+            $tokenStruct = \json_decode($response->getBody()->__toString(), true, 512, \JSON_THROW_ON_ERROR);
+        } catch (Auth0Exception $e) {
             throw new AuthenticationException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         try {
             // Fetch info from the user
-            $userInfo = $this->get(Authentication::class)->userinfo($tokenStruct['access_token']);
+            $response = $this->get(Authentication::class)->userinfo($tokenStruct['access_token']);
+            /** @var array $userInfo */
+            $userInfo = \json_decode($response->getBody()->__toString(), true, 512, \JSON_THROW_ON_ERROR);
             $userModel = UserInfo::create($userInfo);
         } catch (\Exception $e) {
             throw new AuthenticationException('Could not fetch user info from Auth0', 0, $e);

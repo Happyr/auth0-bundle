@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Happyr\Auth0Bundle\DependencyInjection;
 
-use Auth0\SDK\API\Authentication;
-use Happyr\Auth0Bundle\Factory\ManagementFactory;
+use Happyr\Auth0Bundle\Factory\ConfigurationProvider;
 use Happyr\Auth0Bundle\Security\Auth0EntryPoint;
 use Happyr\Auth0Bundle\Security\Auth0UserProviderInterface;
 use Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator;
@@ -43,22 +42,20 @@ final class HappyrAuth0Extension extends Extension
         $container->setParameter('auth0.scope', $config['scope']);
         $container->setParameter('auth0.audience', $config['audience']);
 
-        if ($config['cache']) {
-            $container->setAlias('auth0.cache', $config['cache']);
-        }
-
         if ($config['firewall']['enabled']) {
             $this->configureFirewall($container, $config['firewall']);
         } else {
             $container->removeDefinition(Auth0Authenticator::class);
         }
 
-        if (!empty($config['httplug_client_service'])) {
-            $container->getDefinition(Authentication::class)
-                ->replaceArgument(5, new Reference($config['httplug_client_service']));
+        $configProviderDefinition = $container->getDefinition(ConfigurationProvider::class);
 
-            $container->getDefinition(ManagementFactory::class)
-                ->replaceArgument(3, new Reference($config['httplug_client_service']));
+        if ($config['cache']) {
+            $configProviderDefinition->replaceArgument(1, new Reference($config['cache']));
+        }
+
+        if (!empty($config['httplug_client_service'])) {
+            $configProviderDefinition->replaceArgument(2, new Reference($config['httplug_client_service']));
         }
     }
 

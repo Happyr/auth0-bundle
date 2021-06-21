@@ -1,27 +1,32 @@
-
 services:
-    Happyr\Auth0Bundle\Factory\ManagementFactory:
+    Happyr\Auth0Bundle\Factory\ConfigurationProvider:
         arguments:
-            - '@Auth0\SDK\API\Authentication'
-            - '%auth0.domain%' #domain
-            - '@?auth0.cache'
-            - ~ #http client
-            - '@?logger'
-        tags:
-            - { name: monolog.logger, channel: happyr_auth0 }
+            -
+                clientId: '%auth0.client_id%'
+                clientSecret: '%auth0.client_secret%'
+                domain: '%auth0.domain%'
+                scope: '%auth0.scope%'
+                audience: '%auth0.audience%'
+                httpRequestFactory: '@?Psr\Http\Message\RequestFactoryInterface'
+                httpResponseFactory: '@?Psr\Http\Message\ResponseFactoryInterface'
+                httpStreamFactory: '@?Psr\Http\Message\StreamFactoryInterface'
+            - ~ # cache
+            - ~ # http client
+
+    Happyr\Auth0Bundle\Factory\Auth0Factory:
+        arguments: ['@Happyr\Auth0Bundle\Factory\ConfigurationProvider']
+
+    Auth0\SDK\Auth0:
+        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'auth0']
+        lazy: true
 
     Auth0\SDK\API\Management:
-        factory: ['@Happyr\Auth0Bundle\Factory\ManagementFactory', 'create']
+        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'management']
         lazy: true
 
     Auth0\SDK\API\Authentication:
-        arguments:
-            - 'https://%auth0.domain%'
-            - '%auth0.client_id%'
-            - '%auth0.client_secret%'
-            - '%auth0.audience%'
-            - '%auth0.scope%'
-            - ~ # http client
+        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'authentication']
+        lazy: true
 
     Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator:
         autowire: true
@@ -34,4 +39,4 @@ services:
         - '%auth0.client_id%'
         - '%auth0.login_domain%'
         - '%auth0.scope%'
-        - ~ # check path
+        - ~ # callback route
