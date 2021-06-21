@@ -80,7 +80,8 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
 
         try {
             $redirectUri = $this->get(HttpUtils::class)->generateUri($request, $this->checkRoute);
-            $tokenStruct = $this->get(Authentication::class)->codeExchange((string) $code, $redirectUri);
+            $response = $this->get(Authentication::class)->codeExchange((string) $code, $redirectUri);
+            $tokenStruct = \json_decode($response->getBody()->__toString(), true, 512, \JSON_THROW_ON_ERROR);
         } catch (Auth0Exception $e) {
             throw new AuthenticationException($e->getMessage(), (int) $e->getCode(), $e);
         }
@@ -89,7 +90,7 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
             // Fetch info from the user
             $response = $this->get(Authentication::class)->userinfo($tokenStruct['access_token']);
             /** @var array $userInfo */
-            $userInfo = \json_decode($response->__toString(), true, 512, \JSON_THROW_ON_ERROR);
+            $userInfo = \json_decode($response->getBody()->__toString(), true, 512, \JSON_THROW_ON_ERROR);
             $userModel = UserInfo::create($userInfo);
         } catch (\Exception $e) {
             throw new AuthenticationException('Could not fetch user info from Auth0', 0, $e);
