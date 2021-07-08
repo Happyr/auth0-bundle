@@ -11,7 +11,7 @@ Integrate the new authentication system from Symfony 5.2 with Auth0.
 Install with Composer:
 
 ```bash
-composer require happyr/auth0-bundle auth0/auth0-php:@alpha
+composer require happyr/auth0-bundle auth0/auth0-php:@beta
 ```
 
 Enable the bundle in bundles.php
