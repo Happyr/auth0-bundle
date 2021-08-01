@@ -6,10 +6,14 @@ framework:
 #        storage_factory_id: session.storage.factory.native
 
 happyr_auth0:
-    domain: 'foo.com'
-    client_id: 'client_id'
-    client_secret: 'secret'
     httplug_client_service: 'app.test.httplug'
+    config:
+        domain: 'foo.com'
+        clientId: 'client_id'
+        clientSecret: 'secret'
+        scope:
+            - 'foo'
+            - 'bar'
     firewall:
         check_route: default_login_check
         failure_path: startpage

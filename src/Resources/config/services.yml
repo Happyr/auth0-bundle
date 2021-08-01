@@ -1,15 +1,7 @@
 services:
     Happyr\Auth0Bundle\Factory\ConfigurationProvider:
         arguments:
-            -
-                clientId: '%auth0.client_id%'
-                clientSecret: '%auth0.client_secret%'
-                domain: '%auth0.domain%'
-                scope: '%auth0.scope%'
-                audience: '%auth0.audience%'
-                httpRequestFactory: '@?Psr\Http\Message\RequestFactoryInterface'
-                httpResponseFactory: '@?Psr\Http\Message\ResponseFactoryInterface'
-                httpStreamFactory: '@?Psr\Http\Message\StreamFactoryInterface'
+            - ~ # config
             - ~ # cache
             - ~ # http client
 
@@ -36,7 +28,7 @@ services:
         arguments:
         - '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
         - '@Symfony\Component\Security\Http\HttpUtils'
-        - '%auth0.client_id%'
-        - '%auth0.login_domain%'
-        - '%auth0.scope%'
-        - ~ # callback route
+        - ~ # Client id
+        - ~ # Login domain
+        - ~ # Scope
+        - ~ # Callback route

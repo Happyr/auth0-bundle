@@ -26,7 +26,7 @@ class Auth0EntryPoint implements AuthenticationEntryPointInterface
         HttpUtils $httpUtils,
         string $auth0ClientId,
         string $auth0Domain,
-        string $scope,
+        array $scope,
         string $callbackRoute
     ) {
         $this->csrfTokenManager = $csrfTokenManager;
@@ -49,7 +49,7 @@ class Auth0EntryPoint implements AuthenticationEntryPointInterface
             'client_id' => $this->auth0ClientId,
             'redirect_uri' => $this->httpUtils->generateUri($request, $this->callbackRoute),
             'state' => $csrfToken->getValue(),
-            'scope' => $this->scope,
+            'scope' => implode(' ', $this->scope),
             // https://auth0.com/docs/universal-login/i18n
             'ui_locales' => $request->getLocale(),
         ];
