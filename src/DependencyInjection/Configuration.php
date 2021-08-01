@@ -21,6 +21,7 @@ class Configuration implements ConfigurationInterface
         $root = $treeBuilder->getRootNode();
 
         $root
+            ->ignoreExtraKeys(false)
             ->children()
                 ->scalarNode('domain')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('login_domain')->defaultNull()->info('If you configured SSO with a custom domain.')->end()

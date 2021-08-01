@@ -50,6 +50,13 @@ final class HappyrAuth0Extension extends Extension
 
         $configProviderDefinition = $container->getDefinition(ConfigurationProvider::class);
 
+        // if extra keys
+        if (isset($configs[1]) && [] !== $configs[1]) {
+            $argument = $configProviderDefinition->getArgument(0);
+            $argument = array_merge($configs[1], $argument);
+            $configProviderDefinition->setArgument(0, $argument);
+        }
+
         if ($config['cache']) {
             $configProviderDefinition->replaceArgument(1, new Reference($config['cache']));
         }
