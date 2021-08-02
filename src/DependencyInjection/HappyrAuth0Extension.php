@@ -58,6 +58,7 @@ final class HappyrAuth0Extension extends Extension
         if (!$config['enabled']) {
             $container->removeDefinition(Auth0Authenticator::class);
             $container->removeDefinition(Auth0EntryPoint::class);
+
             return;
         }
 

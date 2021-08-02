@@ -22,11 +22,11 @@ class Auth0EntryPoint implements AuthenticationEntryPointInterface
     private $loginDomain;
 
     public function __construct(
-        SdkConfiguration          $configuration,
+        SdkConfiguration $configuration,
         CsrfTokenManagerInterface $csrfTokenManager,
-        HttpUtils                 $httpUtils,
-        string                    $loginCheckRoute,
-        ?string                   $loginDomain
+        HttpUtils $httpUtils,
+        string $loginCheckRoute,
+        ?string $loginDomain
     ) {
         $this->configuration = $configuration;
         $this->csrfTokenManager = $csrfTokenManager;
