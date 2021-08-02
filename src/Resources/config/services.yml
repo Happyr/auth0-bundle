@@ -22,7 +22,6 @@ services:
             $configuration: '@Auth0\SDK\Configuration\SdkConfiguration'
 
     Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator: ~
-
     auth0.authenticator: '@Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator'
 
     Happyr\Auth0Bundle\Security\Auth0EntryPoint:
@@ -30,5 +29,4 @@ services:
             $configuration: '@Auth0\SDK\Configuration\SdkConfiguration'
             $csrfTokenManager: '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
             $httpUtils: '@Symfony\Component\Security\Http\HttpUtils'
-
     auth0.entry_point: '@Happyr\Auth0Bundle\Security\Auth0EntryPoint'

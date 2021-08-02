@@ -36,10 +36,7 @@ final class HappyrAuth0Extension extends Extension
         $loader->load('services.yml');
 
         $this->configureSdkConfiguration($container, $config['sdk'] ?? []);
-
-        if ($config['firewall']['enabled']) {
-            $this->configureFirewall($container, $config['firewall']);
-        }
+        $this->configureFirewall($container, $config['firewall'] ?? []);
     }
 
     private function configureSdkConfiguration(ContainerBuilder $container, array $config)
@@ -58,6 +55,12 @@ final class HappyrAuth0Extension extends Extension
 
     private function configureFirewall(ContainerBuilder $container, array $config)
     {
+        if (!$config['enabled']) {
+            $container->removeDefinition(Auth0Authenticator::class);
+            $container->removeDefinition(Auth0EntryPoint::class);
+            return;
+        }
+
         if (!(null === $config['success_handler'] xor null === $config['default_target_path'])) {
             throw new \LogicException('You must define either "happyr_auth0.firewall.default_target_path" or "happyr_auth0.firewall.success_handler". Exactly one of them, not both.');
         }
