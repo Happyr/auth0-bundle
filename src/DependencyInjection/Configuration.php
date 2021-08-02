@@ -2,6 +2,9 @@
 
 namespace Happyr\Auth0Bundle\DependencyInjection;
 
+use Auth0\SDK\Configuration\SdkConfiguration;
+use phpDocumentor\Reflection\DocBlock\Tags\Param;
+use phpDocumentor\Reflection\DocBlockFactory;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -20,23 +23,12 @@ class Configuration implements ConfigurationInterface
         /** @var ArrayNodeDefinition $root */
         $root = $treeBuilder->getRootNode();
 
+        $this->addAuth0SdkConfiguration($root);
+
         $root
             ->children()
-                ->scalarNode('login_domain')->defaultNull()->info('If you configured SSO with a custom domain.')->end()
                 ->scalarNode('cache')->defaultNull()->end()
                 ->scalarNode('httplug_client_service')->defaultNull()->end()
-                ->arrayNode('config')->ignoreExtraKeys(false)->info('Valid configuration options are found in https://github.com/auth0/auth0-PHP#configuration-options')
-                    ->children()
-                        ->scalarNode('domain')->isRequired()->cannotBeEmpty()->end()
-                        ->variableNode('scope')->defaultValue([])->info('Array of scopes')->end()
-                        ->scalarNode('clientId')->isRequired()->cannotBeEmpty()->end()
-                        ->scalarNode('clientSecret')->isRequired()->cannotBeEmpty()->end()
-                        ->scalarNode('audience')->defaultNull()->end()
-                        ->scalarNode('httpRequestFactory')->defaultNull()->end()
-                        ->scalarNode('httpResponseFactory')->defaultNull()->end()
-                        ->scalarNode('httpStreamFactory')->defaultNull()->end()
-                    ->end()
-                ->end()
                 ->arrayNode('firewall')->canBeEnabled()
                     ->children()
                         ->scalarNode('check_route')->isRequired()->info('The route where the user ends up after authentication. Ie, the callback route.')->cannotBeEmpty()->end()
@@ -50,6 +42,53 @@ class Configuration implements ConfigurationInterface
 
             ->end();
 
+
         return $treeBuilder;
+    }
+
+    private function addAuth0SdkConfiguration(ArrayNodeDefinition $rootNode): void
+    {
+        $sdkConfigurationRefClass = new \ReflectionClass(SdkConfiguration::class);
+        $constructor = $sdkConfigurationRefClass->getConstructor();
+
+        $docBlockFactory = DocBlockFactory::createInstance();
+        $block = $docBlockFactory->create($constructor->getDocComment());
+        $params = $block->getTagsByName('param');
+
+        $sdkNode = $rootNode
+            ->children()
+                ->arrayNode('sdk')
+                    ->children();
+
+        /** @var Param $param */
+        foreach ($params as $param) {
+            if ($param->getVariableName() === 'configuration') {
+                continue;
+            }
+
+            $sdkNode
+                ->scalarNode($param->getVariableName())
+                ->defaultValue($this->getDefaultValue($param->getVariableName(), $constructor->getParameters()))
+                ->info($param->getDescription());
+        }
+    }
+
+    /**
+     * @param string $parameterName
+     * @param array<\ReflectionParameter> $parameters
+     */
+    private function getDefaultValue(string $parameterName, array $parameters): mixed
+    {
+        foreach ($parameters as $parameter) {
+            if ($parameter->getName() === $parameterName) {
+                if (!$parameter->isOptional()) {
+                    return null;
+                }
+
+                return $parameter->getDefaultValue();
+            }
+        }
+
+        return null;
     }
 }

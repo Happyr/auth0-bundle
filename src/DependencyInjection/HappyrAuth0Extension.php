@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Happyr\Auth0Bundle\DependencyInjection;
 
-use Happyr\Auth0Bundle\Factory\ConfigurationProvider;
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Happyr\Auth0Bundle\Security\Auth0EntryPoint;
 use Happyr\Auth0Bundle\Security\Auth0UserProviderInterface;
 use Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator;
@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -39,35 +40,24 @@ final class HappyrAuth0Extension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        if (!$config['firewall']['enabled']) {
-            $container->removeDefinition(Auth0Authenticator::class);
-        } else {
-            $entryPointDefinition = $container->getDefinition(Auth0EntryPoint::class);
-            $entryPointDefinition->replaceArgument(2, $config['config']['clientId']);
-            $entryPointDefinition->replaceArgument(3, $config['login_domain'] ?? $config['config']['domain']);
-            $entryPointDefinition->replaceArgument(4, $config['config']['scope']);
+        $this->configureSdkConfiguration($container, $config['sdk'] ?? []);
+
+        if ($config['firewall']['enabled']) {
             $this->configureFirewall($container, $config['firewall']);
         }
+    }
 
-        if (null === $config['config']['httpRequestFactory']) {
-            $config['config']['httpRequestFactory'] = new Reference(RequestFactoryInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE);
-        }
-        if (null === $config['config']['httpResponseFactory']) {
-            $config['config']['httpResponseFactory'] = new Reference(ResponseFactoryInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE);
-        }
-        if (null === $config['config']['httpStreamFactory']) {
-            $config['config']['httpStreamFactory'] = new Reference(StreamFactoryInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE);
-        }
+    private function configureSdkConfiguration(ContainerBuilder $container, array $config)
+    {
+        $sdkConfigurationDefinition = $container->getDefinition(SdkConfiguration::class);
+        $sdkConfigurationDefinition->setArgument('$configuration', null);
 
-        $configProviderDefinition = $container->getDefinition(ConfigurationProvider::class);
-        $configProviderDefinition->replaceArgument(0, $config['config']);
+        foreach ($config as $key => $value) {
+            if (is_string($value) && 1 === preg_match('/^@(?<service_name>.*)$/', $value, $matches)) {
+                $value = new Reference($matches['service_name']);
+            }
 
-        if ($config['cache']) {
-            $configProviderDefinition->replaceArgument(1, new Reference($config['cache']));
-        }
-
-        if (!empty($config['httplug_client_service'])) {
-            $configProviderDefinition->replaceArgument(2, new Reference($config['httplug_client_service']));
+            $sdkConfigurationDefinition->setArgument('$'.$key, $value);
         }
     }
 
@@ -91,7 +81,7 @@ final class HappyrAuth0Extension extends Extension
             $def->replaceArgument(2, ['failure_path' => $config['failure_path']]);
         }
 
-        $container->getDefinition(Auth0EntryPoint::class)->replaceArgument(5, $config['check_route']);
+        $container->getDefinition(Auth0EntryPoint::class)->replaceArgument(3, $config['check_route']);
         $container->setAlias('auth0.entry_point', Auth0EntryPoint::class);
 
         $container->setAlias('auth0.authenticator', Auth0Authenticator::class);

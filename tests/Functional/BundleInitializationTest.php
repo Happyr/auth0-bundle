@@ -87,4 +87,31 @@ class BundleInitializationTest extends BaseBundleTestCase
         $config = NSA::getProperty($service, 'configuration');
         $this->assertTrue($config->getQueryUserInfo());
     }
+
+    public function testExtraConfig()
+    {
+        $kernel = $this->createKernel();
+        $kernel->addConfigFile(__DIR__.'/config/default.yml');
+        $kernel->addConfigFile(function (ContainerBuilder $container) {
+            $container->loadFromExtension('happyr_auth0', [
+                'config' => [
+                    'queryUserInfo' => true,
+                ]
+            ]);
+        });
+        $kernel->addBundle(FrameworkBundle::class);
+        $kernel->addBundle(SecurityBundle::class);
+
+        // This should not throw exception
+        $this->bootKernel();
+        $container = $this->getContainer();
+
+        $this->assertTrue($container->has(Management::class));
+        $service = $container->get(Management::class);
+        $this->assertInstanceOf(Management::class, $service);
+
+        /** @var SdkConfiguration $config */
+        $config = NSA::getProperty($service, 'configuration');
+        $this->assertTrue($config->getQueryUserInfo());
+    }
 }

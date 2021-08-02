@@ -1,24 +1,21 @@
 services:
-    Happyr\Auth0Bundle\Factory\ConfigurationProvider:
-        arguments:
-            - ~ # config
-            - ~ # cache
-            - ~ # http client
-
-    Happyr\Auth0Bundle\Factory\Auth0Factory:
-        arguments: ['@Happyr\Auth0Bundle\Factory\ConfigurationProvider']
+    Auth0\SDK\Configuration\SdkConfiguration: ~
 
     Auth0\SDK\Auth0:
-        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'auth0']
         lazy: true
+        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'auth0']
 
     Auth0\SDK\API\Management:
-        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'management']
         lazy: true
+        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'management']
 
     Auth0\SDK\API\Authentication:
-        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'authentication']
         lazy: true
+        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'authentication']
+
+    Happyr\Auth0Bundle\Factory\Auth0Factory:
+        arguments:
+            $sdkConfiguration: '@Auth0\SDK\Configuration\SdkConfiguration'
 
     Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator:
         autowire: true
@@ -26,9 +23,7 @@ services:
 
     Happyr\Auth0Bundle\Security\Auth0EntryPoint:
         arguments:
+        - '@Auth0\SDK\Configuration\SdkConfiguration'
         - '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
         - '@Symfony\Component\Security\Http\HttpUtils'
-        - ~ # Client id
-        - ~ # Login domain
-        - ~ # Scope
-        - ~ # Callback route
+        - ~ # callback route
