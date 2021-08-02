@@ -44,7 +44,7 @@ final class HappyrAuth0Extension extends Extension
         } else {
             $entryPointDefinition = $container->getDefinition(Auth0EntryPoint::class);
             $entryPointDefinition->replaceArgument(2, $config['config']['clientId']);
-            $entryPointDefinition->replaceArgument(3, $config['login_domain'] ?? $config['domain']);
+            $entryPointDefinition->replaceArgument(3, $config['login_domain'] ?? $config['config']['domain']);
             $entryPointDefinition->replaceArgument(4, $config['config']['scope']);
             $this->configureFirewall($container, $config['firewall']);
         }
