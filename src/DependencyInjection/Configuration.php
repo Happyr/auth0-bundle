@@ -60,18 +60,18 @@ class Configuration implements ConfigurationInterface
             }
 
             switch (true) {
-                case 'array' === $parameter->getType()->getName():
+                case $parameter->getType() instanceof \ReflectionNamedType && 'array' === $parameter->getType()->getName():
                     $node = $sdkNode
                         ->arrayNode($parameter->getName())
                                 ->scalarPrototype()
                     ;
                     break;
-                case 'bool' === $parameter->getType()->getName():
+                case $parameter->getType() instanceof \ReflectionNamedType && 'bool' === $parameter->getType()->getName():
                     $node = $sdkNode
                         ->booleanNode($parameter->getName())
                     ;
                     break;
-                case 'int' === $parameter->getType()->getName():
+                case $parameter->getType() instanceof \ReflectionNamedType && 'int' === $parameter->getType()->getName():
                     $node = $sdkNode
                         ->integerNode($parameter->getName())
                     ;

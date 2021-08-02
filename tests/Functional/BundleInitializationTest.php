@@ -59,6 +59,14 @@ class BundleInitializationTest extends BaseBundleTestCase
         /** @var SdkConfiguration $config */
         $config = NSA::getProperty($service, 'configuration');
         $this->assertSame('foo bar', $config->buildScopeString());
+
+        // Verify SdkConfiguration is not shared
+        $sdkConfig1 = $container->get(SdkConfiguration::class);
+        $sdkConfig1->setDomain('updated');
+
+        $sdkConfig2 = $container->get(SdkConfiguration::class);
+        $this->assertEquals('updated', $sdkConfig1->getDomain());
+        $this->assertEquals('foo.com', $sdkConfig2->getDomain());
     }
 
     public function testExtraConfig()
