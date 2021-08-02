@@ -8,16 +8,9 @@ framework:
 happyr_auth0:
     sdk:
         domain: 'foo.com'
-        client_id: 'client_id'
-        client_secret: 'secret'
-        scope:
-            - 'foo'
-            - 'bar'
-    httplug_client_service: 'app.test.httplug'
-    config:
-        domain: 'foo.com'
         clientId: 'client_id'
         clientSecret: 'secret'
+        httpClient: '@app.test.httplug'
         scope:
             - 'foo'
             - 'bar'

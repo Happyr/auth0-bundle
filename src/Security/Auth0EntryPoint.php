@@ -18,18 +18,21 @@ class Auth0EntryPoint implements AuthenticationEntryPointInterface
     private SdkConfiguration $configuration;
     private $csrfTokenManager;
     private $httpUtils;
-    private $callbackRoute;
+    private $loginCheckRoute;
+    private $loginDomain;
 
     public function __construct(
-        SdkConfiguration $configuration,
+        SdkConfiguration          $configuration,
         CsrfTokenManagerInterface $csrfTokenManager,
-        HttpUtils $httpUtils,
-        string $callbackRoute
+        HttpUtils                 $httpUtils,
+        string                    $loginCheckRoute,
+        ?string                   $loginDomain
     ) {
         $this->configuration = $configuration;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->httpUtils = $httpUtils;
-        $this->callbackRoute = $callbackRoute;
+        $this->loginCheckRoute = $loginCheckRoute;
+        $this->loginDomain = $loginDomain;
     }
 
     /**
@@ -42,13 +45,13 @@ class Auth0EntryPoint implements AuthenticationEntryPointInterface
         $query = [
             'response_type' => $this->configuration->getResponseType(),
             'client_id' => $this->configuration->getClientId(),
-            'redirect_uri' => $this->httpUtils->generateUri($request, $this->callbackRoute),
+            'redirect_uri' => $this->httpUtils->generateUri($request, $this->loginCheckRoute),
             'state' => $csrfToken->getValue(),
             'scope' => $this->configuration->buildScopeString(),
             // https://auth0.com/docs/universal-login/i18n
             'ui_locales' => $request->getLocale(),
         ];
 
-        return new RedirectResponse(sprintf('https://%s/authorize?%s', $this->configuration->getDomain(), http_build_query($query)));
+        return new RedirectResponse(sprintf('https://%s/authorize?%s', $this->loginDomain ?? $this->configuration->getDomain(), http_build_query($query)));
     }
 }

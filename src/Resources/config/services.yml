@@ -1,29 +1,34 @@
 services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
     Auth0\SDK\Configuration\SdkConfiguration: ~
 
     Auth0\SDK\Auth0:
         lazy: true
-        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'auth0']
+        arguments:
+            $configuration: '@Auth0\SDK\Configuration\SdkConfiguration'
 
     Auth0\SDK\API\Management:
         lazy: true
-        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'management']
+        arguments:
+            $configuration: '@Auth0\SDK\Configuration\SdkConfiguration'
 
     Auth0\SDK\API\Authentication:
         lazy: true
-        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'authentication']
-
-    Happyr\Auth0Bundle\Factory\Auth0Factory:
         arguments:
-            $sdkConfiguration: '@Auth0\SDK\Configuration\SdkConfiguration'
+            $configuration: '@Auth0\SDK\Configuration\SdkConfiguration'
 
-    Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator:
-        autowire: true
-        autoconfigure: true
+    Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator: ~
+
+    auth0.authenticator: '@Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator'
 
     Happyr\Auth0Bundle\Security\Auth0EntryPoint:
         arguments:
-        - '@Auth0\SDK\Configuration\SdkConfiguration'
-        - '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
-        - '@Symfony\Component\Security\Http\HttpUtils'
-        - ~ # callback route
+            $configuration: '@Auth0\SDK\Configuration\SdkConfiguration'
+            $csrfTokenManager: '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
+            $httpUtils: '@Symfony\Component\Security\Http\HttpUtils'
+
+    auth0.entry_point: '@Happyr\Auth0Bundle\Security\Auth0EntryPoint'

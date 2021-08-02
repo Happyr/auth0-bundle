@@ -25,8 +25,7 @@ class Configuration implements ConfigurationInterface
 
         $root
             ->children()
-                ->scalarNode('cache')->defaultNull()->end()
-                ->scalarNode('httplug_client_service')->defaultNull()->end()
+                ->scalarNode('login_domain')->defaultNull()->info('If you configured SSO with a custom domain.')->end()
                 ->arrayNode('firewall')->canBeEnabled()
                     ->children()
                         ->scalarNode('check_route')->isRequired()->info('The route where the user ends up after authentication. Ie, the callback route.')->cannotBeEmpty()->end()
@@ -49,8 +48,8 @@ class Configuration implements ConfigurationInterface
         $sdkNode = $rootNode
             ->children()
                 ->arrayNode('sdk')
+                    ->info('This node can be configured using key specified in the SDK documentation: https://github.com/auth0/auth0-PHP#configuration-options (only configuration parameter is forbidden).')
                     ->children();
-
 
         $sdkConfigurationRefClass = new \ReflectionClass(SdkConfiguration::class);
         $constructor = $sdkConfigurationRefClass->getConstructor();
@@ -60,11 +59,31 @@ class Configuration implements ConfigurationInterface
                 continue;
             }
 
-            $defaultValue = $parameter->isOptional() ? $parameter->getDefaultValue() : null;
+            switch (true) {
+                case 'array' === $parameter->getType()->getName():
+                    $node = $sdkNode
+                        ->arrayNode($parameter->getName())
+                                ->scalarPrototype()
+                    ;
+                    break;
+                case 'bool' === $parameter->getType()->getName():
+                    $node = $sdkNode
+                        ->booleanNode($parameter->getName())
+                    ;
+                    break;
+                case 'int' === $parameter->getType()->getName():
+                    $node = $sdkNode
+                        ->integerNode($parameter->getName())
+                    ;
+                    break;
+                default:
+                    $node = $sdkNode
+                        ->scalarNode($parameter->getName())
+                    ;
+                    break;
+            }
 
-            $sdkNode
-                ->scalarNode($parameter->getName())
-                ->defaultValue($defaultValue);
+            $node->defaultValue($parameter->isOptional() ? $parameter->getDefaultValue() : null);
         }
     }
 }

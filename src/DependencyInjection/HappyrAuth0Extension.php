@@ -76,12 +76,12 @@ final class HappyrAuth0Extension extends Extension
             $def->replaceArgument(2, ['failure_path' => $config['failure_path']]);
         }
 
-        $container->getDefinition(Auth0EntryPoint::class)->replaceArgument(3, $config['check_route']);
-        $container->setAlias('auth0.entry_point', Auth0EntryPoint::class);
+        $def = $container->getDefinition(Auth0EntryPoint::class);
+        $def->setArgument('$loginCheckRoute', $config['check_route']);
+        $def->setArgument('$loginDomain', $config['login_domain'] ?? null);
 
-        $container->setAlias('auth0.authenticator', Auth0Authenticator::class);
         $def = $container->getDefinition(Auth0Authenticator::class);
-        $def->setArgument('$checkRoute', $config['check_route']);
+        $def->setArgument('$loginCheckRoute', $config['check_route']);
         $def->addTag('container.service_subscriber', ['key' => AuthenticationFailureHandlerInterface::class, 'id' => $failureHandler]);
         $def->addTag('container.service_subscriber', ['key' => AuthenticationSuccessHandlerInterface::class, 'id' => $successHandler]);
 

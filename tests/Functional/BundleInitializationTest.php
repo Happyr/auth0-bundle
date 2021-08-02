@@ -67,7 +67,7 @@ class BundleInitializationTest extends BaseBundleTestCase
         $kernel->addConfigFile(__DIR__.'/config/default.yml');
         $kernel->addConfigFile(function (ContainerBuilder $container) {
             $container->loadFromExtension('happyr_auth0', [
-                'config' => [
+                'sdk' => [
                     'queryUserInfo' => true,
                 ],
             ]);

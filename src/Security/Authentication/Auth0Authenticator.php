@@ -30,17 +30,17 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
     /**
      * @var string
      */
-    private $checkRoute;
+    private $loginCheckRoute;
 
     /**
      * @var ContainerInterface
      */
     private $locator;
 
-    public function __construct(ContainerInterface $locator, string $checkRoute)
+    public function __construct(ContainerInterface $locator, string $loginCheckRoute)
     {
         $this->locator = $locator;
-        $this->checkRoute = $checkRoute;
+        $this->loginCheckRoute = $loginCheckRoute;
     }
 
     public static function getSubscribedServices()
@@ -57,7 +57,7 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
 
     public function supports(Request $request): ?bool
     {
-        if ($request->attributes->get('_route') !== $this->checkRoute) {
+        if ($request->attributes->get('_route') !== $this->loginCheckRoute) {
             return false;
         }
 
@@ -79,7 +79,7 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
         }
 
         try {
-            $redirectUri = $this->get(HttpUtils::class)->generateUri($request, $this->checkRoute);
+            $redirectUri = $this->get(HttpUtils::class)->generateUri($request, $this->loginCheckRoute);
             $response = $this->get(Authentication::class)->codeExchange((string) $code, $redirectUri);
             $tokenStruct = \json_decode($response->getBody()->__toString(), true, 512, \JSON_THROW_ON_ERROR);
         } catch (Auth0Exception $e) {
