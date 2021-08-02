@@ -53,6 +53,12 @@ class BundleInitializationTest extends BaseBundleTestCase
             $service = $container->get($serviceId);
             $this->assertInstanceOf($class, $service);
         }
+
+        // Verify scope
+        $service = $container->get(Management::class);
+        /** @var SdkConfiguration $config */
+        $config = NSA::getProperty($service, 'configuration');
+        $this->assertSame('foo bar', $config->buildScopeString());
     }
 
     public function testExtraConfig()
@@ -63,7 +69,7 @@ class BundleInitializationTest extends BaseBundleTestCase
             $container->loadFromExtension('happyr_auth0', [
                 'config' => [
                     'queryUserInfo' => true,
-                ]
+                ],
             ]);
         });
         $kernel->addBundle(FrameworkBundle::class);
