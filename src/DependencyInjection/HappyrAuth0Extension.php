@@ -8,9 +8,13 @@ use Happyr\Auth0Bundle\Factory\ConfigurationProvider;
 use Happyr\Auth0Bundle\Security\Auth0EntryPoint;
 use Happyr\Auth0Bundle\Security\Auth0UserProviderInterface;
 use Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -35,20 +39,28 @@ final class HappyrAuth0Extension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('auth0.domain', $config['domain']);
-        $container->setParameter('auth0.login_domain', $config['login_domain'] ?? $config['domain']);
-        $container->setParameter('auth0.client_id', $config['client_id']);
-        $container->setParameter('auth0.client_secret', $config['client_secret']);
-        $container->setParameter('auth0.scope', $config['scope']);
-        $container->setParameter('auth0.audience', $config['audience']);
-
-        if ($config['firewall']['enabled']) {
-            $this->configureFirewall($container, $config['firewall']);
-        } else {
+        if (!$config['firewall']['enabled']) {
             $container->removeDefinition(Auth0Authenticator::class);
+        } else {
+            $entryPointDefinition = $container->getDefinition(Auth0EntryPoint::class);
+            $entryPointDefinition->replaceArgument(2, $config['config']['clientId']);
+            $entryPointDefinition->replaceArgument(3, $config['login_domain'] ?? $config['config']['domain']);
+            $entryPointDefinition->replaceArgument(4, $config['config']['scope']);
+            $this->configureFirewall($container, $config['firewall']);
+        }
+
+        if (null === $config['config']['httpRequestFactory']) {
+            $config['config']['httpRequestFactory'] = new Reference(RequestFactoryInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE);
+        }
+        if (null === $config['config']['httpResponseFactory']) {
+            $config['config']['httpResponseFactory'] = new Reference(ResponseFactoryInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE);
+        }
+        if (null === $config['config']['httpStreamFactory']) {
+            $config['config']['httpStreamFactory'] = new Reference(StreamFactoryInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE);
         }
 
         $configProviderDefinition = $container->getDefinition(ConfigurationProvider::class);
+        $configProviderDefinition->replaceArgument(0, $config['config']);
 
         if ($config['cache']) {
             $configProviderDefinition->replaceArgument(1, new Reference($config['cache']));
