@@ -35,18 +35,18 @@ final class HappyrAuth0Extension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $this->configureSdkConfiguration($container, $config['sdk'] ?? []);
+        $this->configureSdkConfiguration($configuration, $container, $config['sdk'] ?? []);
         $this->configureFirewall($container, $config['firewall'] ?? []);
     }
 
-    private function configureSdkConfiguration(ContainerBuilder $container, array $config)
+    private function configureSdkConfiguration(Configuration $configuration, ContainerBuilder $container, array $config)
     {
         $sdkConfigurationDefinition = $container->getDefinition(SdkConfiguration::class);
         $sdkConfigurationDefinition->setArgument('$configuration', null);
 
         foreach ($config as $key => $value) {
-            if (is_string($value) && 1 === preg_match('/^@(?<service_name>.*)$/', $value, $matches)) {
-                $value = new Reference($matches['service_name']);
+            if (null !== $value && $configuration->isArgumentObject($key)) {
+                $value = new Reference($value);
             }
 
             $sdkConfigurationDefinition->setArgument('$'.$key, $value);

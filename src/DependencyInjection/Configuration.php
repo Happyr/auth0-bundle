@@ -12,6 +12,13 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
+    private $argumentObjects = [];
+
+    public function isArgumentObject(string $argument): bool
+    {
+        return in_array($argument, $this->argumentObjects);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -76,6 +83,10 @@ class Configuration implements ConfigurationInterface
                     ;
                     break;
                 default:
+                    if ($parameter->getType() instanceof \ReflectionNamedType && !$parameter->getType()->isBuiltin()) {
+                        $this->argumentObjects[] = $parameter->getName();
+                    }
+
                     $node = $sdkNode
                         ->scalarNode($parameter->getName())
                     ;

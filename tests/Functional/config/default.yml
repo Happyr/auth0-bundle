@@ -10,7 +10,7 @@ happyr_auth0:
         domain: 'foo.com'
         clientId: 'client_id'
         clientSecret: 'secret'
-        httpClient: '@app.test.httplug'
+        httpClient: 'app.test.httplug'
         scope:
             - 'foo'
             - 'bar'
