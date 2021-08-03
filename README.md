@@ -28,23 +28,31 @@ Add your credentials and basic settings.
 ```yaml
 // config/packages/happyr_auth0.yaml
 happyr_auth0:
-    domain: '%env(AUTH0_DOMAIN)%'
     login_domain: '%env(AUTH0_LOGIN_DOMAIN)%'
-    client_id: '%env(AUTH0_CLIENT_ID)%'
-    client_secret: '%env(AUTH0_SECRET)%'
-    cache: 'cache.redis'
-    scope: openid profile email # "openid" is required.
+    # In the sdk node, you can provide every settings provided by the auth0/auth0-PHP library (https://github.com/auth0/auth0-PHP#configuration-options).
+    # Only the "configuration" argument is not authorized.
+    # For every parameter that reference an object, you must provide a service name.
+    sdk:
+        domain: '%env(AUTH0_DOMAIN)%'
+        clientId: '%env(AUTH0_CLIENT_ID)%'
+        clientSecret: '%env(AUTH0_SECRET)%'
+        tokenCache: 'cache.app' # will reference the @cache.app service automatically
+        scope:
+          - openid # "openid" is required.
+          - profile
+          - email
 ```
 
-You are now up and running and can use services `Auth0\SDK\API\Authentication` and
-`Auth0\SDK\API\Management`. If you want to integrate with the authentication sysstem
-there are a bit more configuration you may do.
+You are now up and running and can use services `Auth0\SDK\Auth0`, `Auth0\SDK\API\Authentication`,
+`Auth0\SDK\API\Management` and `Auth0\SDK\Configuration\SdkConfiguration`.
+
+If you want to integrate with the authentication system there are a bit more configuration you may do.
 
 ## Authentication
 
 Start by telling Symfony what entrypoint we use and add `auth0.authenticator` as
 "custom authenticator". This will make Symfony aware of the Auth0Bundle and how to
-use it .
+use it.
 
 ```yaml
 // config/packages/security.yml
