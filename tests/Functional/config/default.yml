@@ -2,15 +2,13 @@ framework:
     secret: 'abc'
     csrf_protection:
         enabled: true
-#    session:
-#        storage_factory_id: session.storage.factory.native
 
 happyr_auth0:
     sdk:
         domain: 'foo.com'
         clientId: 'client_id'
         clientSecret: 'secret'
-        httpClient: 'app.test.httplug'
+        httpClient: 'http.client'
         scope:
             - 'foo'
             - 'bar'
@@ -41,6 +39,6 @@ security:
                 invalidate_session: true
 
 services:
-    app.test.httplug:
-        class: Http\Mock\Client
-        factory: 'Happyr\Auth0Bundle\Tests\Functional\MockedClientFactory::create'
+    http.client:
+        class: Http\Client\HttpClient
+        factory: ['Http\Discovery\HttpClientDiscovery', 'find']
