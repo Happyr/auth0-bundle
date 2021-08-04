@@ -6,11 +6,11 @@ framework:
 #        storage_factory_id: session.storage.factory.native
 
 happyr_auth0:
-    httplug_client_service: 'app.test.httplug'
-    config:
+    sdk:
         domain: 'foo.com'
         clientId: 'client_id'
         clientSecret: 'secret'
+        httpClient: 'app.test.httplug'
         scope:
             - 'foo'
             - 'bar'

@@ -1,34 +1,33 @@
 services:
-    Happyr\Auth0Bundle\Factory\ConfigurationProvider:
-        arguments:
-            - ~ # config
-            - ~ # cache
-            - ~ # http client
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    Happyr\Auth0Bundle\Factory\Auth0Factory:
-        arguments: ['@Happyr\Auth0Bundle\Factory\ConfigurationProvider']
+    Auth0\SDK\Configuration\SdkConfiguration:
+        shared: false
 
     Auth0\SDK\Auth0:
-        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'auth0']
         lazy: true
+        arguments:
+            $configuration: '@Auth0\SDK\Configuration\SdkConfiguration'
 
     Auth0\SDK\API\Management:
-        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'management']
         lazy: true
+        arguments:
+            $configuration: '@Auth0\SDK\Configuration\SdkConfiguration'
 
     Auth0\SDK\API\Authentication:
-        factory: ['@Happyr\Auth0Bundle\Factory\Auth0Factory', 'authentication']
         lazy: true
+        arguments:
+            $configuration: '@Auth0\SDK\Configuration\SdkConfiguration'
 
-    Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator:
-        autowire: true
-        autoconfigure: true
+    Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator: ~
+    auth0.authenticator: '@Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator'
 
     Happyr\Auth0Bundle\Security\Auth0EntryPoint:
         arguments:
-        - '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
-        - '@Symfony\Component\Security\Http\HttpUtils'
-        - ~ # Client id
-        - ~ # Login domain
-        - ~ # Scope
-        - ~ # Callback route
+            $configuration: '@Auth0\SDK\Configuration\SdkConfiguration'
+            $csrfTokenManager: '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
+            $httpUtils: '@Symfony\Component\Security\Http\HttpUtils'
+    auth0.entry_point: '@Happyr\Auth0Bundle\Security\Auth0EntryPoint'

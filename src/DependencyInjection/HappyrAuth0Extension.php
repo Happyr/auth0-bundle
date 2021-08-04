@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace Happyr\Auth0Bundle\DependencyInjection;
 
-use Happyr\Auth0Bundle\Factory\ConfigurationProvider;
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Happyr\Auth0Bundle\Security\Auth0EntryPoint;
 use Happyr\Auth0Bundle\Security\Auth0UserProviderInterface;
 use Happyr\Auth0Bundle\Security\Authentication\Auth0Authenticator;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -39,40 +35,33 @@ final class HappyrAuth0Extension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        if (!$config['firewall']['enabled']) {
-            $container->removeDefinition(Auth0Authenticator::class);
-        } else {
-            $entryPointDefinition = $container->getDefinition(Auth0EntryPoint::class);
-            $entryPointDefinition->replaceArgument(2, $config['config']['clientId']);
-            $entryPointDefinition->replaceArgument(3, $config['login_domain'] ?? $config['config']['domain']);
-            $entryPointDefinition->replaceArgument(4, $config['config']['scope']);
-            $this->configureFirewall($container, $config['firewall']);
-        }
+        $this->configureSdkConfiguration($configuration, $container, $config['sdk'] ?? []);
+        $this->configureFirewall($container, $config['firewall'] ?? []);
+    }
 
-        if (null === $config['config']['httpRequestFactory']) {
-            $config['config']['httpRequestFactory'] = new Reference(RequestFactoryInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE);
-        }
-        if (null === $config['config']['httpResponseFactory']) {
-            $config['config']['httpResponseFactory'] = new Reference(ResponseFactoryInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE);
-        }
-        if (null === $config['config']['httpStreamFactory']) {
-            $config['config']['httpStreamFactory'] = new Reference(StreamFactoryInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE);
-        }
+    private function configureSdkConfiguration(Configuration $configuration, ContainerBuilder $container, array $config)
+    {
+        $sdkConfigurationDefinition = $container->getDefinition(SdkConfiguration::class);
+        $sdkConfigurationDefinition->setArgument('$configuration', null);
 
-        $configProviderDefinition = $container->getDefinition(ConfigurationProvider::class);
-        $configProviderDefinition->replaceArgument(0, $config['config']);
+        foreach ($config as $key => $value) {
+            if (null !== $value && $configuration->isArgumentObject($key)) {
+                $value = new Reference($value);
+            }
 
-        if ($config['cache']) {
-            $configProviderDefinition->replaceArgument(1, new Reference($config['cache']));
-        }
-
-        if (!empty($config['httplug_client_service'])) {
-            $configProviderDefinition->replaceArgument(2, new Reference($config['httplug_client_service']));
+            $sdkConfigurationDefinition->setArgument('$'.$key, $value);
         }
     }
 
     private function configureFirewall(ContainerBuilder $container, array $config)
     {
+        if (!$config['enabled']) {
+            $container->removeDefinition(Auth0Authenticator::class);
+            $container->removeDefinition(Auth0EntryPoint::class);
+
+            return;
+        }
+
         if (!(null === $config['success_handler'] xor null === $config['default_target_path'])) {
             throw new \LogicException('You must define either "happyr_auth0.firewall.default_target_path" or "happyr_auth0.firewall.success_handler". Exactly one of them, not both.');
         }
@@ -91,12 +80,12 @@ final class HappyrAuth0Extension extends Extension
             $def->replaceArgument(2, ['failure_path' => $config['failure_path']]);
         }
 
-        $container->getDefinition(Auth0EntryPoint::class)->replaceArgument(5, $config['check_route']);
-        $container->setAlias('auth0.entry_point', Auth0EntryPoint::class);
+        $def = $container->getDefinition(Auth0EntryPoint::class);
+        $def->setArgument('$loginCheckRoute', $config['check_route']);
+        $def->setArgument('$loginDomain', $config['login_domain'] ?? null);
 
-        $container->setAlias('auth0.authenticator', Auth0Authenticator::class);
         $def = $container->getDefinition(Auth0Authenticator::class);
-        $def->setArgument('$checkRoute', $config['check_route']);
+        $def->setArgument('$loginCheckRoute', $config['check_route']);
         $def->addTag('container.service_subscriber', ['key' => AuthenticationFailureHandlerInterface::class, 'id' => $failureHandler]);
         $def->addTag('container.service_subscriber', ['key' => AuthenticationSuccessHandlerInterface::class, 'id' => $successHandler]);
 
