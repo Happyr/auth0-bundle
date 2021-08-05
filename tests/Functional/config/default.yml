@@ -2,8 +2,6 @@ framework:
     secret: 'abc'
     csrf_protection:
         enabled: true
-#    session:
-#        storage_factory_id: session.storage.factory.native
 
 happyr_auth0:
     sdk:
