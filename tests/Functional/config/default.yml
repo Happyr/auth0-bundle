@@ -8,7 +8,7 @@ happyr_auth0:
         domain: 'foo.com'
         clientId: 'client_id'
         clientSecret: 'secret'
-        httpClient: 'http.client'
+        httpClient: 'app.test.httplug'
         scope:
             - 'foo'
             - 'bar'
@@ -39,6 +39,6 @@ security:
                 invalidate_session: true
 
 services:
-    http.client:
-        class: Http\Client\HttpClient
-        factory: ['Http\Discovery\HttpClientDiscovery', 'find']
+    app.test.httplug:
+        class: Http\Mock\Client
+        factory: 'Happyr\Auth0Bundle\Tests\Functional\MockedClientFactory::create'
