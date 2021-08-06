@@ -58,17 +58,18 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
 
             $auth0->exchange($redirectUri);
             $userModel = UserInfo::create($auth0->getUser());
-            $userProviderCallback = null;
-            if (null !== $up = $this->get(Auth0UserProviderInterface::class)) {
-                $userProviderCallback = static function () use ($up, $userModel) {
-                    return $up->loadByUserModel($userModel);
-                };
-            }
-
-            return new SelfValidatingPassport(new UserBadge($userModel->getEmail(), $userProviderCallback), [new Auth0Badge($userModel)]);
         } catch (Auth0Exception $e) {
             throw new AuthenticationException($e->getMessage(), (int) $e->getCode(), $e);
         }
+
+        $userProviderCallback = null;
+        if (null !== $up = $this->get(Auth0UserProviderInterface::class)) {
+            $userProviderCallback = static function () use ($up, $userModel) {
+                return $up->loadByUserModel($userModel);
+            };
+        }
+
+        return new SelfValidatingPassport(new UserBadge($userModel->getUserId(), $userProviderCallback), [new Auth0Badge($userModel)]);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response

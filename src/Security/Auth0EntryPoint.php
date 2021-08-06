@@ -31,7 +31,7 @@ class Auth0EntryPoint implements AuthenticationEntryPointInterface
     public function start(Request $request, AuthenticationException $authException = null)
     {
         return new RedirectResponse(
-            $this->auth0->signup(
+            $this->auth0->login(
                 $this->httpUtils->generateUri($request, $this->loginCheckRoute), [
                     'ui_locales' => $request->getLocale(),
                 ]
