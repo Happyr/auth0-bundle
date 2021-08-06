@@ -9,10 +9,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\BadgeInterface;
 
 final class Auth0Badge implements BadgeInterface
 {
-    /**
-     * @var UserInfo
-     */
-    private $user;
+    private UserInfo $user;
 
     public function __construct(UserInfo $user)
     {

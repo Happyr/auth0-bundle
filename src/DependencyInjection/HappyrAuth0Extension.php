@@ -82,7 +82,6 @@ final class HappyrAuth0Extension extends Extension
 
         $def = $container->getDefinition(Auth0EntryPoint::class);
         $def->setArgument('$loginCheckRoute', $config['check_route']);
-        $def->setArgument('$loginDomain', $config['login_domain'] ?? null);
 
         $def = $container->getDefinition(Auth0Authenticator::class);
         $def->setArgument('$loginCheckRoute', $config['check_route']);

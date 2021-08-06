@@ -2,11 +2,10 @@
 
 namespace Happyr\Auth0Bundle\Security;
 
-use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Auth0;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\HttpUtils;
 
@@ -15,24 +14,15 @@ use Symfony\Component\Security\Http\HttpUtils;
  */
 class Auth0EntryPoint implements AuthenticationEntryPointInterface
 {
-    private SdkConfiguration $configuration;
-    private $csrfTokenManager;
-    private $httpUtils;
-    private $loginCheckRoute;
-    private $loginDomain;
+    private Auth0 $auth0;
+    private HttpUtils $httpUtils;
+    private string $loginCheckRoute;
 
-    public function __construct(
-        SdkConfiguration $configuration,
-        CsrfTokenManagerInterface $csrfTokenManager,
-        HttpUtils $httpUtils,
-        string $loginCheckRoute,
-        ?string $loginDomain
-    ) {
-        $this->configuration = $configuration;
-        $this->csrfTokenManager = $csrfTokenManager;
+    public function __construct(Auth0 $auth0, HttpUtils $httpUtils, string $loginCheckRoute)
+    {
+        $this->auth0 = $auth0;
         $this->httpUtils = $httpUtils;
         $this->loginCheckRoute = $loginCheckRoute;
-        $this->loginDomain = $loginDomain;
     }
 
     /**
@@ -40,18 +30,12 @@ class Auth0EntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        $csrfToken = $this->csrfTokenManager->getToken('auth0-sso');
-
-        $query = [
-            'response_type' => $this->configuration->getResponseType(),
-            'client_id' => $this->configuration->getClientId(),
-            'redirect_uri' => $this->httpUtils->generateUri($request, $this->loginCheckRoute),
-            'state' => $csrfToken->getValue(),
-            'scope' => $this->configuration->buildScopeString(),
-            // https://auth0.com/docs/universal-login/i18n
-            'ui_locales' => $request->getLocale(),
-        ];
-
-        return new RedirectResponse(sprintf('https://%s/authorize?%s', $this->loginDomain ?? $this->configuration->getDomain(), http_build_query($query)));
+        return new RedirectResponse(
+            $this->auth0->signup(
+                $this->httpUtils->generateUri($request, $this->loginCheckRoute), [
+                    'ui_locales' => $request->getLocale(),
+                ]
+            )
+        );
     }
 }
