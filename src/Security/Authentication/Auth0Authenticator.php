@@ -69,7 +69,7 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
             };
         }
 
-        return new SelfValidatingPassport(new UserBadge($userModel->getUserId(), $userProviderCallback), [new Auth0Badge($userModel)]);
+        return new SelfValidatingPassport(new UserBadge($userModel->getLoginIdentifier(), $userProviderCallback), [new Auth0Badge($userModel)]);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response

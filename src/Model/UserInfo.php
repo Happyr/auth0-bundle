@@ -161,9 +161,22 @@ final class UserInfo implements \ArrayAccess
         return isset($this->data['last_password_reset']) ? new \DateTimeImmutable($this->data['last_password_reset']) : null;
     }
 
+    /**
+     * This is the user id from Auth0. If the user is logged in with a social provider
+     * this could be null.
+     */
     public function getUserId(): ?string
     {
         return $this->data['user_id'] ?? null;
+    }
+
+    /**
+     * This is a unique id for this user or login method. An Auth0 user may have
+     * multiple "login identifiers". So this is "more unique" than the user id.
+     */
+    public function getLoginIdentifier(): string
+    {
+        return $this->getUserId() ?? $this->data['sub'];
     }
 
     public function getRoles(): array
