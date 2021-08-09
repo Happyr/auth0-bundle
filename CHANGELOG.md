@@ -4,9 +4,19 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 
 ## 0.8.0
 
+### Added
+
+- Updated `UserInfo` to reflect the [Auth0 user model](https://auth0.com/docs/users/user-profile-structure)
+
 ### Changed
 
-- [BC break] The `UserInfo::getUserId()` does not verify `"sub"` anymore. It goes directly to `"user_id"`.
+- [BC break] The `UserInfo::getUserId()` does not use `"sub"` anymore. It goes directly to `"user_id"`. Consider using `UserInfo::getLoginIdentifier()` instead
+- [BC break] The configuration has moved around to directly pass config values to the SDK. See readme or dump configuration reference.
+
+### Removed
+
+- [BC break] Removed `ManagementFactory`.
+- [BC break] DI container parameters
 
 ## 0.7.0
 
