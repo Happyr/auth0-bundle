@@ -29,7 +29,8 @@ Add your credentials and basic settings.
 // config/packages/happyr_auth0.yaml
 happyr_auth0:
     login_domain: '%env(AUTH0_LOGIN_DOMAIN)%'
-    # In the sdk node, you can provide every settings provided by the auth0/auth0-PHP library (https://github.com/auth0/auth0-PHP#configuration-options).
+    # In the sdk node, you can provide every settings provided by the auth0/auth0-PHP library
+    # (https://github.com/auth0/auth0-PHP#configuration-options).
     # Only the "configuration" argument is not authorized.
     # For every parameter that reference an object, you must provide a service name.
     sdk:
@@ -37,6 +38,8 @@ happyr_auth0:
         clientId: '%env(AUTH0_CLIENT_ID)%'
         clientSecret: '%env(AUTH0_SECRET)%'
         tokenCache: 'cache.app' # will reference the @cache.app service automatically
+        managementTokenCache: 'cache.app'
+        cookieSecret: '%kernel.secret%' # To encrypt cookie values
         scope:
           - openid # "openid" is required.
           - profile
