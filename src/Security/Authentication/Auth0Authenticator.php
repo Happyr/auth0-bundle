@@ -54,11 +54,14 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
     {
         $auth0 = $this->get(Auth0::class);
         try {
-            $redirectUri = $this->get(HttpUtils::class)->generateUri($request, $this->loginCheckRoute);
-
-            if (!$auth0->exchange($redirectUri)) {
-                throw new AuthenticationException('Could not exchange authorization code for access, ID, and refresh tokens.');
-            }
+            /*
+             * We do getUser() instead of exchange() because if the user is
+             * already logged in, the getUser() will check the state first.
+             *
+             * We need to update the configuration with the RedirectionUrl or
+             * the internal call to exchange() will fail
+             */
+            $auth0->configuration()->setRedirectUri($this->get(HttpUtils::class)->generateUri($request, $this->loginCheckRoute));
             $userModel = UserInfo::create($auth0->getUser());
         } catch (Auth0Exception $e) {
             throw new AuthenticationException($e->getMessage(), (int) $e->getCode(), $e);
