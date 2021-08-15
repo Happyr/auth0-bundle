@@ -41,6 +41,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('default_target_path')->defaultNull()->info('The path or route where user is redirected on authentication success.')->end()
                         ->scalarNode('success_handler')->defaultNull()->info('A service implementing AuthenticationSuccessHandlerInterface.')->end()
                         ->scalarNode('user_provider')->defaultNull()->info('A service implementing Auth0UserProviderInterface. If none provided, the user provider of the firewall will be used.')->end()
+                        ->scalarNode('target_path_parameter')->defaultValue('_target_path')->info('Name of the query parameter where we store the target path.')->end()
                     ->end()
                 ->end()
 
