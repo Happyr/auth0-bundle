@@ -32,7 +32,6 @@ class Configuration implements ConfigurationInterface
 
         $root
             ->children()
-                ->scalarNode('login_domain')->defaultNull()->info('If you configured SSO with a custom domain.')->end()
                 ->arrayNode('firewall')->canBeEnabled()
                     ->children()
                         ->scalarNode('check_route')->isRequired()->info('The route where the user ends up after authentication. Ie, the callback route.')->cannotBeEmpty()->end()
