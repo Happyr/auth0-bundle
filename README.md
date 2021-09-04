@@ -28,7 +28,6 @@ Add your credentials and basic settings.
 ```yaml
 // config/packages/happyr_auth0.yaml
 happyr_auth0:
-    login_domain: '%env(AUTH0_LOGIN_DOMAIN)%'
     # In the sdk node, you can provide every settings provided by the auth0/auth0-PHP library
     # (https://github.com/auth0/auth0-PHP#configuration-options).
     # Only the "configuration" argument is not authorized.
