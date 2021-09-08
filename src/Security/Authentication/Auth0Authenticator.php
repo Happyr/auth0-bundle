@@ -62,7 +62,12 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
              * the internal call to exchange() will fail
              */
             $auth0->configuration()->setRedirectUri($this->get(HttpUtils::class)->generateUri($request, $this->loginCheckRoute));
-            $userModel = UserInfo::create($auth0->getUser());
+            $auth0User = $auth0->getUser();
+            if (!is_array($auth0User)) {
+                throw new AuthenticationException('Could not get user data from Auth0');
+            }
+
+            $userModel = UserInfo::create($auth0User);
         } catch (Auth0Exception $e) {
             throw new AuthenticationException($e->getMessage(), (int) $e->getCode(), $e);
         }
