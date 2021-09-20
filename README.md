@@ -141,3 +141,84 @@ happyr_auth0:
         # ..
         user_provider: App\UserProvider\Auth0UserProvider
 ```
+
+## Troubleshooting
+
+Make sure you have csrf_protection enabled.
+
+```yaml
+framework:
+    csrf_protection:
+        enabled: true
+```
+
+## Example configuration
+
+Below is an example configuration. We use the `Psr6Store` to store all data in Redis
+and the session key in cookies. We also define to use the `MemoryStore` when testing.
+
+```yaml
+
+happyr_auth0:
+    sdk:
+        domain: '%env(AUTH0_DOMAIN)%'
+        clientId: '%env(AUTH0_CLIENT_ID)%'
+        clientSecret: '%env(AUTH0_SECRET)%'
+        # Use custom domain for universal login
+        customDomain: '%env(AUTH0_LOGIN_DOMAIN)%'
+        cookieSecret: '%kernel.secret%'
+        tokenCache: 'cache.redis'
+        managementTokenCache: 'cache.redis'
+        transientStorage: 'auth0.storage.transient'
+        sessionStorage: 'auth0.storage.session'
+        scope:
+            - openid # "openid" is required.
+            - profile
+            - email
+    firewall:
+        check_route: default_login_check
+        failure_path: default_logout
+        default_target_path: startpage
+
+services:
+    # Create a new SdkConfiguration service to be able to create
+    # auth0.storage.cookie_* services without circular references
+
+    auth0.sdk_cookie_config:
+        class: Auth0\SDK\Configuration\SdkConfiguration
+        arguments:
+            - domain: '%env(AUTH0_DOMAIN)%'
+              clientId: '%env(AUTH0_CLIENT_ID)%'
+              clientSecret: '%env(AUTH0_SECRET)%'
+              customDomain: '%env(AUTH0_LOGIN_DOMAIN)%'
+              cookieSecret: '%kernel.secret%'
+
+    auth0.storage.cookie_transient:
+        class: Auth0\SDK\Store\CookieStore
+        factory: ['@auth0.sdk_cookie_config', 'getTransientStorage']
+
+    auth0.storage.cookie_session:
+        class: Auth0\SDK\Store\CookieStore
+        factory: ['@auth0.sdk_cookie_config', 'getSessionStorage']
+
+    auth0.storage.transient:
+        class: Auth0\SDK\Store\Psr6Store
+        arguments: ['@auth0.storage.cookie_transient', '@cache.redis']
+
+    auth0.storage.session:
+        class: Auth0\SDK\Store\Psr6Store
+        arguments: ['@auth0.storage.cookie_session', '@cache.redis']
+
+when@test:
+    services:
+        test.auth0.session_storage:
+            class: Auth0\SDK\Store\MemoryStore
+
+        test.auth0.transient_storage:
+            class: Auth0\SDK\Store\MemoryStore
+
+    happyr_auth0:
+        sdk:
+            transientStorage: test.auth0.transient_storage
+            sessionStorage: test.auth0.session_storage
+```
