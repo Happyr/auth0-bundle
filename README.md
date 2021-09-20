@@ -141,13 +141,3 @@ happyr_auth0:
         # ..
         user_provider: App\UserProvider\Auth0UserProvider
 ```
-
-## Troubleshooting
-
-Make sure you have csrf_protection enabled.
-
-```yaml
-framework:
-    csrf_protection:
-        enabled: true
-```
