@@ -53,21 +53,19 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
     public function authenticate(Request $request): PassportInterface
     {
         $auth0 = $this->get(Auth0::class);
+
         try {
-            /*
-             * We do getUser() instead of exchange() because if the user is
-             * already logged in, the getUser() will check the state first.
-             *
-             * We need to update the configuration with the RedirectionUrl or
-             * the internal call to exchange() will fail
-             */
-            $auth0->configuration()->setRedirectUri($this->get(HttpUtils::class)->generateUri($request, $this->loginCheckRoute));
-            $auth0User = $auth0->getUser();
-            if (!is_array($auth0User)) {
-                throw new AuthenticationException('Could not get user data from Auth0');
+            $session = $auth0->getCredentials();
+            if (null === $session) {
+                if (null === $auth0->getExchangeParameters()) {
+                    throw new AuthenticationException('Missing auth0 exchange parameters');
+                }
+
+                $redirectUri = $this->get(HttpUtils::class)->generateUri($request, $this->loginCheckRoute);
+                $auth0->exchange($redirectUri);
             }
 
-            $userModel = UserInfo::create($auth0User);
+            $userModel = UserInfo::create($auth0->getUser());
         } catch (Auth0Exception $e) {
             throw new AuthenticationException($e->getMessage(), (int) $e->getCode(), $e);
         }
