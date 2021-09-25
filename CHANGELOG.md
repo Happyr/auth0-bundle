@@ -2,6 +2,12 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 0.8.1
+
+### Fixed
+
+- Compatibility with Auth0 8.0.0
+
 ## 0.8.0
 
 ### Added
