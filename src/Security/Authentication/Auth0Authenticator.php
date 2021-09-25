@@ -55,17 +55,21 @@ final class Auth0Authenticator extends AbstractAuthenticator implements ServiceS
         $auth0 = $this->get(Auth0::class);
 
         try {
-            $session = $auth0->getCredentials();
-            if (null === $session) {
+            if (null === $auth0->getCredentials()) {
                 if (null === $auth0->getExchangeParameters()) {
-                    throw new AuthenticationException('Missing auth0 exchange parameters');
+                    throw new AuthenticationException('Missing auth0 code exchange parameters');
                 }
 
                 $redirectUri = $this->get(HttpUtils::class)->generateUri($request, $this->loginCheckRoute);
                 $auth0->exchange($redirectUri);
             }
 
-            $userModel = UserInfo::create($auth0->getUser());
+            $auth0User = $auth0->getUser();
+            if (!is_array($auth0User)) {
+                throw new AuthenticationException('Could not get user data from Auth0');
+            }
+
+            $userModel = UserInfo::create($auth0User);
         } catch (Auth0Exception $e) {
             throw new AuthenticationException($e->getMessage(), (int) $e->getCode(), $e);
         }
